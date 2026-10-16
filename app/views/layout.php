@@ -28,10 +28,13 @@ $flashes = \App\Request::pullFlash();
       <a href="<?= e(url('/painel')) ?>">Painel</a>
       <a href="<?= e(url('/projetos')) ?>">Meus projetos</a>
       <a href="<?= e(url('/projetos/novo')) ?>">Criar material</a>
+      <a href="<?= e(url('/cartazes/novo')) ?>">Criar cartaz</a>
+      <a href="<?= e(url('/estilos')) ?>">Estilos</a>
       <?php if (\App\Auth::isAdmin()): ?>
         <a href="<?= e(url('/admin/escolas')) ?>">Escolas</a>
         <a href="<?= e(url('/admin/usuarios')) ?>">Usuários</a>
         <a href="<?= e(url('/admin/bncc')) ?>">Base BNCC</a>
+        <a href="<?= e(url('/admin/identidade')) ?>">Identidade</a>
         <a href="<?= e(url('/poc')) ?>">PoC motores</a>
       <?php endif; ?>
       <span class="menu-usuario"><?= e($usuarioLogado['name']) ?> · <?= e($usuarioLogado['role_name']) ?></span>

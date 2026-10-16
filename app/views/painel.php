@@ -8,7 +8,7 @@
   <div class="cartoes">
     <article class="cartao">
       <h2>Meus projetos</h2>
-      <p><a class="botao" href="<?= e(url('/projetos/novo')) ?>">Criar material</a> &nbsp; <a href="<?= e(url('/projetos')) ?>">Ver meus projetos</a></p>
+      <p><a class="botao" href="<?= e(url('/projetos/novo')) ?>">Criar material</a> <a class="botao botao-leve" href="<?= e(url('/cartazes/novo')) ?>">Criar cartaz</a> &nbsp; <a href="<?= e(url('/projetos')) ?>">Ver meus projetos</a> · <a href="<?= e(url('/estilos')) ?>">Estilos</a></p>
     </article>
     <?php if (\App\Auth::isAdmin()): ?>
       <article class="cartao"><h2>Escolas e usuários</h2><p><a href="<?= e(url('/admin/escolas')) ?>">Cadastrar escolas</a> · <a href="<?= e(url('/admin/usuarios')) ?>">Cadastrar usuários</a></p></article>

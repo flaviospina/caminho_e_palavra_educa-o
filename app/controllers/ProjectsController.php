@@ -254,7 +254,63 @@ final class ProjectsController
         if ($file === null) {
             return new Response('Imagem ainda não gerada.', 404, ['Content-Type' => 'text/plain; charset=utf-8']);
         }
-        return new Response((string) file_get_contents($file), 200, ['Content-Type' => 'image/png', 'Cache-Control' => 'private, max-age=60']);
+        $headers = ['Content-Type' => 'image/png', 'Cache-Control' => 'private, max-age=60'];
+        if (Request::get('baixar') === '1') {
+            $nome = ($project['type'] === 'cartaz' ? 'cartaz-' . strtolower((string) ($page['format'] ?: 'a4')) : 'pagina-' . $page['number']) . '-projeto-' . (int) $project['id'] . '.png';
+            $headers['Content-Disposition'] = 'attachment; filename="' . $nome . '"';
+        }
+        return new Response((string) file_get_contents($file), 200, $headers);
+    }
+
+    /** POST /projetos/{id}/duplicar — cópia como rascunho (conteúdo vigente), sem imagens. */
+    public function duplicate(array $args): Response
+    {
+        [$project, $resp] = $this->load($args);
+        if ($resp !== null) {
+            return $resp;
+        }
+        if (!Csrf::check(Request::post(Csrf::FIELD))) {
+            Request::flash('erro', 'Sessão expirada. Tente de novo.');
+            return Response::redirect(url('/projetos/' . $project['id']));
+        }
+        $user = Auth::user();
+        $doc = Project::currentContent($project);
+        if (($project['type'] ?? '') === 'cartaz') {
+            // No cartaz o título faz parte da arte: a cópia só muda o nome na lista
+            $novo = \App\Services\PosterService::create($user, $doc);
+            Project::rename($novo, 'Cópia de ' . $project['title']);
+        } else {
+            $doc['capa']['titulo'] = mb_substr('Cópia de ' . ($doc['capa']['titulo'] ?? $doc['tema']), 0, 60);
+            $novo = Project::create($user, $doc);
+        }
+        AuditLog::record('projeto_duplicado', 'projects', $novo, ['origem' => (int) $project['id']]);
+        Request::flash('ok', 'Projeto duplicado. Esta é a cópia; revise o que quiser antes de gerar as imagens.');
+        return Response::redirect(url('/projetos/' . $novo));
+    }
+
+    /**
+     * POST /projetos/{id}/apostila.pdf — montagem do PDF no servidor (mPDF) com a
+     * ordem enviada (ordem=0,2,1,3). Alternativa quando o pdf-lib do navegador não carrega.
+     */
+    public function bookPdf(array $args): Response
+    {
+        [$project, $resp] = $this->load($args);
+        if ($resp !== null) {
+            return $resp;
+        }
+        if (!Csrf::check(Request::post(Csrf::FIELD))) {
+            Request::flash('erro', 'Sessão expirada. Tente de novo.');
+            return Response::redirect(url('/projetos/' . $project['id']));
+        }
+        try {
+            $ordem = array_map('intval', array_filter(explode(',', Request::post('ordem')), fn($x) => $x !== ''));
+            $bytes = (new \App\Services\BookPdfService())->build($project, $ordem);
+        } catch (InvalidArgumentException $e) {
+            Request::flash('erro', $e->getMessage());
+            return Response::redirect(url('/projetos/' . $project['id']));
+        }
+        $nome = 'apostila-' . (int) $project['id'] . '.pdf';
+        return new Response($bytes, 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'attachment; filename="' . $nome . '"', 'Content-Length' => (string) strlen($bytes)]);
     }
 
     /** POST /projetos/{id}/excluir — exclui rascunho (só autor ou admin). */

@@ -12,7 +12,10 @@ use App\Controllers\HealthController;
 use App\Controllers\HomeController;
 use App\Controllers\Api\BnccApiController;
 use App\Controllers\PocController;
+use App\Controllers\PostersController;
 use App\Controllers\ProjectsController;
+use App\Controllers\StylesController;
+use App\Controllers\Admin\BrandingController;
 use App\Controllers\TermController;
 use App\Guard;
 use App\Router;
@@ -58,12 +61,24 @@ return static function (Router $router): void {
     $router->post('/projetos/{id}/paginas/{n}/regenerar', Guard::auth([$projects, 'regeneratePage']));
     $router->get('/projetos/{id}/status', Guard::auth([$projects, 'status']));
     $router->get('/projetos/{id}/pagina/{n}.png', Guard::auth([$projects, 'pageImage']));
+    // Fase 5 — cartazes, duplicar, PDF da apostila, estilos, identidade
+    $router->post('/projetos/{id}/duplicar', Guard::auth([$projects, 'duplicate']));
+    $router->post('/projetos/{id}/apostila.pdf', Guard::auth([$projects, 'bookPdf']));
+    $posters = new PostersController();
+    $router->get('/cartazes/novo', Guard::auth([$posters, 'newForm']));
+    $router->post('/cartazes', Guard::auth([$posters, 'create']));
+    $router->get('/estilos', Guard::auth([new StylesController(), 'index']));
+    $router->get('/escolas/{id}/logo', Guard::auth([$schools = new SchoolsController(), 'logo']));
+    $branding = new BrandingController();
+    $router->get('/identidade/logo', Guard::auth([$branding, 'logo']));
+    $router->get('/admin/identidade', Guard::admin([$branding, 'index']));
+    $router->post('/admin/identidade', Guard::admin([$branding, 'save']));
+    $router->post('/admin/banco/atualizar', Guard::admin([$branding, 'updateSchema']));
     $api = new BnccApiController();
     $router->get('/api/bncc/componentes', Guard::auth([$api, 'components']));
     $router->get('/api/bncc/habilidades', Guard::auth([$api, 'skills']));
 
     // Admin (Secretaria/CECAPE)
-    $schools = new SchoolsController();
     $router->get('/admin/escolas', Guard::admin([$schools, 'index']));
     $router->get('/admin/escolas/nova', Guard::admin([$schools, 'createForm']));
     $router->post('/admin/escolas', Guard::admin([$schools, 'create']));

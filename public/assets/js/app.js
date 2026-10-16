@@ -155,3 +155,58 @@ registrarAlpine(() => {
     },
   }));
 });
+
+// Montagem do PDF da apostila no navegador (pdf-lib via CDN, carregado sob demanda).
+registrarAlpine(() => {
+  Alpine.data('montagemPdf', (cfg) => ({
+    ordem: cfg.paginas.slice(), origem: null, montando: false, mensagem: '',
+    arrastar(i) { this.origem = i; },
+    soltar(destino) {
+      if (this.origem === null || this.origem === destino || destino === 0 && this.ordem[0].numero === 0) { this.origem = null; return; }
+      const lista = this.ordem.slice(); const [item] = lista.splice(this.origem, 1);
+      if (item.numero === 0) { this.origem = null; return; }
+      lista.splice(destino, 0, item); this.ordem = lista; this.origem = null;
+    },
+    mover(i, delta) {
+      const j = i + delta; if (j < 0 || j >= this.ordem.length || this.ordem[j].numero === 0 || this.ordem[i].numero === 0) { return; }
+      const lista = this.ordem.slice(); [lista[i], lista[j]] = [lista[j], lista[i]]; this.ordem = lista;
+    },
+    carregarPdfLib() {
+      if (window.PDFLib) { return Promise.resolve(); }
+      return new Promise((ok, falha) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+        s.onload = () => ok(); s.onerror = () => falha(new Error('cdn'));
+        document.head.appendChild(s);
+      });
+    },
+    async baixar() {
+      this.montando = true; this.mensagem = '';
+      try {
+        await this.carregarPdfLib();
+        const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+        const pdf = await PDFDocument.create();
+        pdf.setTitle(cfg.titulo); pdf.setAuthor('Materiais Visuais CECAPE');
+        const fonte = await pdf.embedFont(StandardFonts.Helvetica);
+        const A4 = [595.28, 841.89];
+        const semCapa = this.ordem.filter((p) => p.numero !== 0).length;
+        let indice = 0;
+        for (const p of this.ordem) {
+          const bytes = await (await fetch(p.imagem, { credentials: 'same-origin', cache: 'no-store' })).arrayBuffer();
+          const img = await pdf.embedPng(bytes);
+          const page = pdf.addPage(A4);
+          page.drawImage(img, { x: 0, y: A4[1] - A4[0] * 1.5, width: A4[0], height: A4[0] * 1.5 });
+          const rotulo = (p.numero === 0 ? 'Capa' : 'Página ' + (++indice) + ' de ' + semCapa) + ' · ' + cfg.rodape;
+          page.drawText(rotulo, { x: 18, y: 10, size: 6.5, font: fonte, color: rgb(0.39, 0.45, 0.55) });
+        }
+        const blob = new Blob([await pdf.save()], { type: 'application/pdf' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'apostila-' + cfg.projeto + '.pdf'; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+        this.mensagem = 'PDF montado com ' + this.ordem.length + ' página(s) A4.';
+      } catch (e) {
+        this.mensagem = 'Não foi possível montar no navegador (' + (e.message === 'cdn' ? 'biblioteca não carregou' : e.message) + '). Usando o servidor…';
+        this.$refs.fallback.requestSubmit();
+      } finally { this.montando = false; }
+    },
+  }));
+});

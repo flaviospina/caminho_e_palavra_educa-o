@@ -23,7 +23,11 @@
       "blocos_max": 6
     },
     "amostra": "/assets/img/estilos/cartoon_infantil.jpg",
-    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo.",
+    "faixas": [
+      "EI",
+      "EF_ANOS_INICIAIS"
+    ]
   },
   {
     "chave": "doodle_escolar",
@@ -49,7 +53,11 @@
       "blocos_max": 8
     },
     "amostra": "/assets/img/estilos/doodle_escolar.jpg",
-    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo.",
+    "faixas": [
+      "EF_ANOS_INICIAIS",
+      "EF_ANOS_FINAIS"
+    ]
   },
   {
     "chave": "colagem_adesivos",
@@ -75,7 +83,11 @@
       "blocos_max": 9
     },
     "amostra": "/assets/img/estilos/colagem_adesivos.jpg",
-    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo.",
+    "faixas": [
+      "EF_ANOS_INICIAIS",
+      "EF_ANOS_FINAIS"
+    ]
   },
   {
     "chave": "infografico_limpo",
@@ -101,7 +113,11 @@
       "blocos_max": 8
     },
     "amostra": "/assets/img/estilos/infografico_limpo.jpg",
-    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo.",
+    "faixas": [
+      "EF_ANOS_FINAIS",
+      "EM"
+    ]
   },
   {
     "chave": "jovem_cinematografico",
@@ -127,7 +143,11 @@
       "blocos_max": 7
     },
     "amostra": "/assets/img/estilos/jovem_cinematografico.jpg",
-    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo.",
+    "faixas": [
+      "EF_ANOS_FINAIS",
+      "EM"
+    ]
   },
   {
     "chave": "epico_realista",
@@ -153,6 +173,10 @@
       "blocos_max": 5
     },
     "amostra": "/assets/img/estilos/epico_realista.jpg",
-    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo.",
+    "faixas": [
+      "EF_ANOS_FINAIS",
+      "EM"
+    ]
   }
 ]

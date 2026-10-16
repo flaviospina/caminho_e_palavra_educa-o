@@ -157,6 +157,12 @@ final class Project
         }
     }
 
+    /** Renomeia o projeto na lista (não altera o conteúdo JSON nem a arte). */
+    public static function rename(int $id, string $title): void
+    {
+        Database::get()->prepare('UPDATE projects SET title = :t WHERE id = :id')->execute(['t' => mb_substr($title, 0, 191), 'id' => $id]);
+    }
+
     public static function setStatus(int $id, string $status): void
     {
         Database::get()->prepare('UPDATE projects SET status = :s WHERE id = :id')->execute(['s' => $status, 'id' => $id]);

@@ -181,3 +181,21 @@ button.link { background: none; border: 0; color: var(--azul); cursor: pointer; 
 .galeria-item.estado-erro { border-color: var(--vermelho); }
 .galeria-item.estado-pronto { border-color: var(--verde); }
 .problemas { margin: 0.3rem 0 0; padding-left: 1rem; color: #92400e; }
+
+/* ── Fase 5: cartazes, montagem do PDF, biblioteca de estilos, identidade ── */
+.linha-dupla { display: grid; gap: 0.75rem; grid-template-columns: 1fr 1fr; }
+.logo-previa { max-height: 64px; max-width: 200px; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px; }
+.ordem-paginas { list-style: none; padding: 0; margin: 0.5rem 0; display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+.ordem-paginas li { border: 2px dashed #cbd5e1; border-radius: 10px; padding: 0.4rem; background: #fff; cursor: grab; text-align: center; font-size: 0.8rem; }
+.ordem-paginas li.fixa { border-style: solid; border-color: var(--azul); cursor: default; }
+.ordem-paginas img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 6px; margin-bottom: 0.25rem; }
+.ordem-paginas .setas { display: flex; justify-content: center; gap: 0.3rem; margin-top: 0.25rem; }
+.ordem-paginas .setas button { border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 6px; cursor: pointer; padding: 0.1rem 0.5rem; }
+.ordem-paginas .setas button:disabled { opacity: 0.35; cursor: default; }
+.baixar { display: inline-block; margin-left: 0.3rem; }
+.estilos-biblioteca { grid-template-columns: 1fr; }
+.estilos-biblioteca .estilo-cartao { cursor: default; }
+.previas { display: grid; gap: 0.5rem; grid-template-columns: 1fr 1fr; }
+.previas figure { margin: 0; }
+.previas figcaption { font-size: 0.75rem; color: var(--cinza-600); text-align: center; }
+@media (min-width: 640px) { .estilos-biblioteca { grid-template-columns: 1fr 1fr; } }
