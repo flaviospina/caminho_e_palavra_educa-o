@@ -5,10 +5,11 @@
     "license": "proprietary",
     "require": {
         "php": ">=8.2",
+        "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
-        "ext-mbstring": "*",
-        "ext-json": "*"
+        "mpdf/mpdf": "^8.3"
     },
     "autoload": {
         "classmap": ["app/"]

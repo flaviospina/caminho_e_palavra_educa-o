@@ -14,6 +14,17 @@ storage/public/*
 !storage/logs/
 storage/logs/*
 !storage/logs/.gitkeep
+!storage/cache/
+storage/cache/*
+!storage/cache/.gitkeep
+
+# Partes do vendor/ que não são usadas em produção (fontes do mPDF: usamos
+# templates/fonts; testes das bibliotecas). O restante do vendor/ é versionado.
+vendor/mpdf/mpdf/ttfonts/
+vendor/mpdf/mpdf/tests/
+vendor/mpdf/mpdf/tmp/
+vendor/setasign/fpdi/tests/
+vendor/setasign/fpdi/local-tests/
 
 # Ferramentas e sistema
 .idea/
