@@ -8,6 +8,7 @@ $envTest = dirname(__DIR__) . '/.env.test';
 define('ENV_FILE', is_file($envTest) ? $envTest : dirname(__DIR__) . '/.env');
 
 require dirname(__DIR__) . '/app/bootstrap.php';
+require __DIR__ . '/helpers.php';
 
 /** Executa um arquivo .sql (vários comandos) no banco de teste. */
 function teste_aplicar_sql(string $file): void
@@ -19,6 +20,7 @@ function teste_aplicar_sql(string $file): void
 try {
     teste_aplicar_sql(dirname(__DIR__) . '/sql/schema.sql');
     teste_aplicar_sql(dirname(__DIR__) . '/sql/seeds.sql');
+    (new App\Services\SchemaUpdater())->apply();
 } catch (Throwable $e) {
     fwrite(STDERR, "Não foi possível preparar o banco de teste: " . $e->getMessage() . "\nConfira .env.test (DB_*).\n");
     exit(1);

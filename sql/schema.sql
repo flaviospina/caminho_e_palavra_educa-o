@@ -7,6 +7,9 @@
 --   * nenhuma função exclusiva do MySQL 8.
 -- Tabelas: roles, schools, users, password_resets, consents, bncc_skills, styles,
 --          projects, pages, generation_jobs, usage_log, audit_log, quotas.
+-- Colunas acrescentadas em fases posteriores são aplicadas por
+-- app/services/SchemaUpdater.php (Admin → Banco de dados ou tools/migrate.php),
+-- porque o MySQL 5.7 não aceita ADD COLUMN IF NOT EXISTS.
 
 SET NAMES utf8mb4;
 
@@ -26,6 +29,9 @@ CREATE TABLE IF NOT EXISTS schools (
     name        VARCHAR(150) NOT NULL,
     short_name  VARCHAR(60) NULL,                    -- nome curto para capas e listas
     inep_code   VARCHAR(12) NULL,                    -- código INEP (opcional)
+    logo_path   VARCHAR(255) NULL,                   -- logotipo (storage/schools/…), composto nas capas
+    primary_color CHAR(7) NULL,                      -- cor principal (#RRGGBB) para capas e cartazes
+    tagline     VARCHAR(120) NULL,                   -- frase curta da escola (opcional)
     city        VARCHAR(80) NOT NULL DEFAULT 'São Caetano do Sul',
     active      TINYINT(1) NOT NULL DEFAULT 1,
     created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -164,6 +170,7 @@ CREATE TABLE IF NOT EXISTS pages (
     project_id     INT UNSIGNED NOT NULL,
     number         SMALLINT UNSIGNED NOT NULL,          -- 0 = capa
     kind           VARCHAR(20) NOT NULL DEFAULT 'pagina', -- capa | abertura | explicacao | pratica | cartaz
+    format         VARCHAR(10) NULL,                  -- cartazes: A4 | STORY | FEED
     status         VARCHAR(20) NOT NULL DEFAULT 'pendente', -- pendente | gerando | conferindo | pronto | erro | revisar
     image_path     VARCHAR(255) NULL,                 -- caminho relativo em storage/
     prompt_text    MEDIUMTEXT NULL,

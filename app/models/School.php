@@ -38,27 +38,38 @@ final class School
         if ($inep !== '' && strlen($inep) !== 8) {
             throw new InvalidArgumentException('O código INEP tem 8 dígitos.');
         }
+        $cor = strtoupper(trim((string) ($in['primary_color'] ?? '')));
+        if ($cor !== '' && !preg_match('/^#[0-9A-F]{6}$/', $cor)) {
+            throw new InvalidArgumentException('A cor principal deve estar no formato #RRGGBB.');
+        }
         return [
-            'name'       => $name,
-            'short_name' => mb_substr(trim((string) ($in['short_name'] ?? '')), 0, 60) ?: null,
-            'inep_code'  => $inep ?: null,
-            'city'       => mb_substr(trim((string) ($in['city'] ?? 'São Caetano do Sul')), 0, 80) ?: 'São Caetano do Sul',
-            'active'     => !empty($in['active']) ? 1 : 0,
+            'name'          => $name,
+            'short_name'    => mb_substr(trim((string) ($in['short_name'] ?? '')), 0, 60) ?: null,
+            'inep_code'     => $inep ?: null,
+            'city'          => mb_substr(trim((string) ($in['city'] ?? 'São Caetano do Sul')), 0, 80) ?: 'São Caetano do Sul',
+            'active'        => !empty($in['active']) ? 1 : 0,
+            'primary_color' => $cor ?: null,
+            'tagline'       => mb_substr(trim((string) ($in['tagline'] ?? '')), 0, 120) ?: null,
         ];
     }
 
     public static function create(array $data): int
     {
         $pdo = Database::get();
-        $st = $pdo->prepare('INSERT INTO schools (name, short_name, inep_code, city, active) VALUES (:name, :short_name, :inep_code, :city, :active)');
+        $st = $pdo->prepare('INSERT INTO schools (name, short_name, inep_code, city, active, primary_color, tagline) VALUES (:name, :short_name, :inep_code, :city, :active, :primary_color, :tagline)');
         $st->execute($data);
         return (int) $pdo->lastInsertId();
     }
 
     public static function update(int $id, array $data): void
     {
-        $st = Database::get()->prepare('UPDATE schools SET name = :name, short_name = :short_name, inep_code = :inep_code, city = :city, active = :active WHERE id = :id');
+        $st = Database::get()->prepare('UPDATE schools SET name = :name, short_name = :short_name, inep_code = :inep_code, city = :city, active = :active, primary_color = :primary_color, tagline = :tagline WHERE id = :id');
         $st->execute($data + ['id' => $id]);
+    }
+
+    public static function setLogo(int $id, ?string $path): void
+    {
+        Database::get()->prepare('UPDATE schools SET logo_path = :p WHERE id = :id')->execute(['p' => $path, 'id' => $id]);
     }
 
     public static function nameExists(string $name, ?int $exceptId = null): bool

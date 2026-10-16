@@ -57,7 +57,7 @@ final class PromptBuilder
     }
 
     /** Monta o pedido de imagem da CAPA (modelo compartilhado templates/styles/_capa.txt). */
-    public function buildCover(array $doc, string $quality = 'high'): ImageRequest
+    public function buildCover(array $doc, string $quality = 'high', ?array $school = null): ImageRequest
     {
         $style = Styles::get((string) ($doc['estilo'] ?? ''));
         $file = Styles::dir() . '/_capa.txt';
@@ -77,6 +77,8 @@ final class PromptBuilder
             '{titulo}'              => (string) ($capa['titulo'] ?? $doc['tema'] ?? ''),
             '{subtitulo}'           => (string) ($capa['subtitulo'] ?? ''),
             '{frase_inferior}'      => (string) ($capa['frase_inferior'] ?? ''),
+            '{escola}'              => (string) ($school['short_name'] ?? $school['name'] ?? 'escola municipal'),
+            '{rede}'                => \App\Services\CoverBranding::networkName(),
         ];
         $prompt = trim(strtr($template, $vars));
         $context = [
@@ -85,6 +87,44 @@ final class PromptBuilder
             'blocos' => [], 'numero' => 0, 'total' => count($doc['paginas'] ?? []), 'cores' => $style['cores'] ?? [],
         ];
         return new ImageRequest($prompt, 'A4', $quality, 'capa', $context);
+    }
+
+    /** Monta o pedido de imagem de um CARTAZ no formato indicado (STORY, FEED ou A4). */
+    public function buildPoster(array $doc, string $format, string $quality = 'high', ?array $school = null): ImageRequest
+    {
+        $format = strtoupper($format);
+        if (!isset(\App\Services\PosterService::FORMATS[$format])) {
+            throw new AiException('Formato de cartaz desconhecido: ' . $format);
+        }
+        $style = Styles::get((string) ($doc['estilo'] ?? ''));
+        $file = Styles::dir() . '/_cartaz.txt';
+        $template = @file_get_contents($file);
+        if ($template === false) {
+            throw new AiException('Modelo de cartaz não encontrado.', $file);
+        }
+        $e = $doc['evento'] ?? [];
+        $infos = array_map(fn($i) => '- "' . $i . '"', $e['informacoes'] ?? []);
+        $vars = [
+            '{formato_descricao}'   => \App\Services\PosterService::FORMATS[$format][2],
+            '{descricao_do_estilo}' => (string) $style['descricao'],
+            '{mascote}'             => (string) $style['mascote'],
+            '{escola}'              => (string) ($school['short_name'] ?? $school['name'] ?? ($e['escola'] ?? 'escola municipal')),
+            '{tipo_evento}'         => (string) ($e['tipo_rotulo'] ?? ''),
+            '{titulo}'              => (string) ($e['titulo'] ?? ''),
+            '{data_hora}'           => (string) ($e['data_hora'] ?? ''),
+            '{local}'               => (string) ($e['local'] ?? ''),
+            '{chamada}'             => (string) ($e['chamada'] ?? ''),
+            '{informacoes}'         => $infos === [] ? '(nenhuma)' : implode("\n", $infos),
+            '{rede}'                => \App\Services\CoverBranding::networkName(),
+        ];
+        $prompt = trim(strtr($template, $vars));
+        $context = [
+            'capa' => true, 'estilo' => $style['chave'], 'etiqueta' => (string) ($e['tipo_rotulo'] ?? ''),
+            'titulo' => $vars['{titulo}'], 'subtitulo' => trim($vars['{data_hora}'] . ' · ' . $vars['{local}'], ' ·'),
+            'rodape' => $vars['{chamada}'] !== '' ? $vars['{chamada}'] : implode(' · ', $e['informacoes'] ?? []),
+            'blocos' => [], 'numero' => 0, 'total' => 1, 'cores' => $style['cores'] ?? [],
+        ];
+        return new ImageRequest($prompt, $format, $quality, 'cartaz ' . $format, $context);
     }
 
     /** Textos que devem aparecer na imagem de uma página (0 = capa), para a conferência. @return string[] */

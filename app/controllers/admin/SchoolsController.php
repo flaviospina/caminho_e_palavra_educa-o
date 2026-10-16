@@ -10,6 +10,7 @@ use App\Models\AuditLog;
 use App\Models\School;
 use App\Request;
 use App\Response;
+use App\Upload;
 use App\View;
 use InvalidArgumentException;
 
@@ -36,7 +37,11 @@ final class SchoolsController
             if (School::nameExists($data['name'])) {
                 throw new InvalidArgumentException('Já existe uma escola com este nome.');
             }
+            $logo = Upload::image('logo', 'schools');
             $id = School::create($data);
+            if ($logo !== null) {
+                School::setLogo($id, $logo);
+            }
             AuditLog::record('escola_criada', 'schools', $id, $data);
             Request::flash('ok', 'Escola cadastrada.');
             return Response::redirect(url('/admin/escolas'));
@@ -44,6 +49,17 @@ final class SchoolsController
             Request::flash('erro', $e->getMessage());
             return Response::redirect(url('/admin/escolas/nova'));
         }
+    }
+
+    /** GET /escolas/{id}/logo — logotipo da escola (usuários logados). */
+    public function logo(array $args): Response
+    {
+        $escola = School::find((int) ($args['id'] ?? 0));
+        $file = $escola === null ? null : Upload::path($escola['logo_path'] ?? null);
+        if ($file === null) {
+            return new Response('Sem logotipo.', 404, ['Content-Type' => 'text/plain; charset=utf-8']);
+        }
+        return new Response((string) file_get_contents($file), 200, ['Content-Type' => Upload::mime($file), 'Cache-Control' => 'private, max-age=3600']);
     }
 
     public function editForm(array $args): Response
@@ -70,7 +86,13 @@ final class SchoolsController
             if (School::nameExists($data['name'], $id)) {
                 throw new InvalidArgumentException('Já existe outra escola com este nome.');
             }
+            $logo = Upload::image('logo', 'schools');
             School::update($id, $data);
+            if ($logo !== null) {
+                School::setLogo($id, $logo);
+            } elseif (!empty($_POST['remover_logo'])) {
+                School::setLogo($id, null);
+            }
             AuditLog::record('escola_alterada', 'schools', $id, $data);
             Request::flash('ok', 'Escola atualizada.');
             return Response::redirect(url('/admin/escolas'));

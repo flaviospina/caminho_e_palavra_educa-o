@@ -36,7 +36,7 @@ final class ImageRequest
     public function openai_size(): string
     {
         return match ($this->format) {
-            'STORY' => '1024x1792',
+            'STORY' => '1024x1792',   // 9:16 (múltiplo de 16, dentro dos limites do gpt-image-2.5)
             'FEED'  => '1024x1024',
             default => '1024x1536',
         };

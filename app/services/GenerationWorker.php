@@ -13,6 +13,8 @@ use App\Ai\EngineFactory;
 use App\Ai\ImageEngine;
 use App\Ai\PromptBuilder;
 use App\Ai\Verifier;
+use App\Services\CoverBranding;
+use App\Services\PosterService;
 use App\Log;
 use App\Models\GenerationJob;
 use App\Models\Page;
@@ -111,8 +113,22 @@ final class GenerationWorker
 
         try {
             $builder = new PromptBuilder();
-            $request = $number === 0 ? $builder->buildCover($doc, $this->factory->setting('IMAGE_QUALITY')) : $builder->build($doc, $number, $this->factory->setting('IMAGE_QUALITY'));
-            $expected = PromptBuilder::expectedTexts($doc, $number);
+            $school = $schoolId !== null ? \App\Models\School::find($schoolId) : null;
+            $quality = $this->factory->setting('IMAGE_QUALITY');
+            $isPoster = ($project['type'] ?? '') === 'cartaz';
+            $brand = false;
+            if ($isPoster) {
+                $request = $builder->buildPoster($doc, (string) ($page['format'] ?: 'A4'), $quality, $school);
+                $expected = PosterService::expectedTexts($doc);
+                $brand = true;
+            } elseif ($number === 0) {
+                $request = $builder->buildCover($doc, $quality, $school);
+                $expected = PromptBuilder::expectedTexts($doc, 0);
+                $brand = true;
+            } else {
+                $request = $builder->build($doc, $number, $quality);
+                $expected = PromptBuilder::expectedTexts($doc, $number);
+            }
             $engine = $this->engine();
             $verifier = $this->verifier();
             $check = null;
@@ -124,6 +140,10 @@ final class GenerationWorker
                 $result = $engine->generate($request);
                 $imageRel = 'projects/' . $project['id'] . '/pagina-' . $number . '-v' . $attempt . '-' . substr(bin2hex(random_bytes(3)), 0, 6) . '.png';
                 $result->save(STORAGE_PATH . '/' . $imageRel);
+                if ($brand) {
+                    // Faixa de identidade visual (logotipos e nomes) composta no servidor
+                    file_put_contents(STORAGE_PATH . '/' . $imageRel, CoverBranding::apply($result->png, $school));
+                }
                 UsageLog::record([
                     'user_id' => $userId, 'school_id' => $schoolId, 'context' => $project['type'] ?? 'apostila', 'reference' => $ref,
                     'engine' => $result->engine, 'model' => $result->model, 'resolution' => $result->resolution(),

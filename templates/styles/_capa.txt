@@ -1,5 +1,6 @@
 Gere UMA ÚNICA capa vertical A4 de material didático, vista de frente, sem mockup, sem páginas lado a lado, preenchida de borda a borda.
 Estilo: {descricao_do_estilo}. Mascote: {mascote}.
 Público: {ano} — {etapa}. Componente curricular: {componente}. Tema: {tema}.
-Composição de capa: etiqueta pequena no topo com "{texto_superior}"; título enorme ocupando cerca de um quarto da altura: "{titulo}"; subtítulo logo abaixo: "{subtitulo}"; o mascote ou objeto simbólico do tema ocupa o terço inferior ou a lateral sem cobrir texto; frase na base: "{frase_inferior}".
+Composição de capa: etiqueta pequena no topo com "{texto_superior}"; título enorme ocupando cerca de um quarto da altura: "{titulo}"; subtítulo logo abaixo: "{subtitulo}"; o mascote ou objeto simbólico do tema ocupa o terço inferior ou a lateral sem cobrir texto; frase logo acima da base: "{frase_inferior}".
+Deixe os 8% inferiores da página como uma faixa lisa e vazia (sem texto nem desenho): ali será aplicado o logotipo da escola "{escola}" e da rede "{rede}".
 Todos os textos em português do Brasil, com acentuação correta e grafia exatamente como escrita acima. Não acrescente nenhum outro texto. Não use personagens de marcas, filmes ou desenhos conhecidos. Não mostre rostos de crianças reais. Confira a grafia de cada palavra antes de entregar.
