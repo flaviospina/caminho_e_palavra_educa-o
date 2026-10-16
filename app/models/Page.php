@@ -61,6 +61,9 @@ final class Page
     /** Cria/atualiza as linhas de pages conforme o conteúdo; remove páginas que deixaram de existir. */
     public static function syncFromContent(int $projectId, array $doc): void
     {
+        if (($doc['tipo'] ?? '') === 'cartaz') {
+            return;   // páginas de cartaz são criadas por formato (PosterService)
+        }
         $pdo = Database::get();
         $wanted = [];
         if (!empty($doc['capa'])) {

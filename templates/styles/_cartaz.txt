@@ -1,0 +1,10 @@
+Gere UM ÚNICO cartaz de evento escolar, {formato_descricao}, visto de frente, sem mockup, sem várias versões lado a lado, preenchido de borda a borda.
+Estilo: {descricao_do_estilo}. Mascote: {mascote}.
+Escola: "{escola}". Evento: {tipo_evento}.
+Título enorme e legível: "{titulo}".
+Logo abaixo, em destaque: "{data_hora}" e "{local}".
+Chamada: "{chamada}".
+Informações em letras menores, uma por linha:
+{informacoes}
+Deixe os 8% inferiores como uma faixa lisa e vazia (sem texto nem desenho): ali será aplicado o logotipo da escola e da rede "{rede}".
+Todos os textos em português do Brasil, com acentuação correta e grafia exatamente como escrita acima. Não acrescente nenhum outro texto. Não use personagens de marcas, filmes ou desenhos conhecidos. Não mostre rostos de crianças reais. Confira a grafia de cada palavra antes de entregar.

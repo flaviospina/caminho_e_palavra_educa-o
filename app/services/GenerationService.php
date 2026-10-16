@@ -58,6 +58,7 @@ final class GenerationService
             $pages[] = [
                 'numero'     => (int) $p['number'],
                 'tipo'       => $p['kind'],
+                'formato'    => $p['format'] ?? null,
                 'status'     => $p['status'],
                 'rotulo'     => Page::STATUS[$p['status']] ?? $p['status'],
                 'tentativas' => (int) $p['attempts'],
