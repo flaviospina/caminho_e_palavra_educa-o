@@ -157,6 +157,32 @@ final class Project
         }
     }
 
+    public static function setStatus(int $id, string $status): void
+    {
+        Database::get()->prepare('UPDATE projects SET status = :s WHERE id = :id')->execute(['s' => $status, 'id' => $id]);
+    }
+
+    /** Recalcula o status do projeto a partir das páginas (gerando → pronto/erro). */
+    public static function refreshStatusFromPages(int $id): string
+    {
+        $pages = Page::forProject($id);
+        $status = 'pronto';
+        foreach ($pages as $p) {
+            if (in_array($p['status'], ['pendente', 'gerando', 'conferindo'], true)) {
+                $status = 'gerando';
+                break;
+            }
+            if ($p['status'] === 'erro') {
+                $status = 'erro';
+            }
+        }
+        if ($pages === []) {
+            $status = 'revisado';
+        }
+        self::setStatus($id, $status);
+        return $status;
+    }
+
     public static function softDelete(int $id): void
     {
         Database::get()->prepare('UPDATE projects SET deleted_at = NOW() WHERE id = :id')->execute(['id' => $id]);

@@ -1,0 +1,28 @@
+# deploy/materiais-worker.service
+# Unidade systemd do worker de geração (cecape-server / HestiaCP).
+# Instalação (terminal web do HestiaCP, como root):
+#   cp deploy/materiais-worker.service /etc/systemd/system/
+#   systemctl daemon-reload && systemctl enable --now materiais-worker
+#   journalctl -u materiais-worker -f
+# Ajuste User, WorkingDirectory e o caminho do PHP conforme o servidor.
+[Unit]
+Description=Materiais Visuais CECAPE — worker da fila de geração de imagens
+After=network-online.target mysql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=cecape
+WorkingDirectory=/home/cecape/web/materiais.cecapescs.com.br/public_html
+ExecStart=/usr/bin/php8.2 workers/generation_worker.php --continuo --intervalo=5
+Restart=always
+RestartSec=10
+TimeoutStopSec=400
+KillSignal=SIGTERM
+Nice=5
+# Segurança básica
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -72,7 +72,7 @@ final class PocService
         $request = $builder->build($doc, $pageNumber, $this->factory->setting('IMAGE_QUALITY'));
         $runId ??= date('Ymd-His') . '-' . substr(bin2hex(random_bytes(3)), 0, 6);
         $dir = $this->baseDir . '/' . $runId;
-        if (!is_dir($dir) && !@mkdir($dir, 0750, true) && !is_dir($dir)) {
+        if (!is_dir($dir) && !@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new AiException('Não foi possível criar a pasta da execução em storage/poc.', $dir);
         }
         file_put_contents($dir . '/prompt.txt', $request->prompt);

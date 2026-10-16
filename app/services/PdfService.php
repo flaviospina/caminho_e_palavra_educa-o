@@ -15,7 +15,7 @@ final class PdfService
     {
         $tmp = STORAGE_PATH . '/cache/mpdf';
         if (!is_dir($tmp)) {
-            @mkdir($tmp, 0750, true);
+            @mkdir($tmp, 0755, true);
         }
         return new Mpdf([
             'mode'         => 'utf-8',
