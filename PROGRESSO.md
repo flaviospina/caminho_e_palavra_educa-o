@@ -5,14 +5,14 @@
 
 ## Fase atual
 
-**FASE 1 — Prova de conceito dos motores de IA: concluída no modo simulado;
-aguardando o teste com chaves reais e `APROVADO FASE 1`.**
+**FASE 2 — Banco de dados, BNCC e autenticação: concluída, aguardando
+`APROVADO FASE 2`.**
 
 | Fase | Situação |
 |---|---|
 | 0 — Fundação | ✅ aprovada (16/10/2026) |
-| 1 — Prova de conceito dos motores de IA | 🔄 entregue; falta o teste com chaves reais pelo coordenador |
-| 2 — Banco, BNCC e autenticação | ⏳ |
+| 1 — Prova de conceito dos motores de IA | ✅ aprovada (16/10/2026) |
+| 2 — Banco, BNCC e autenticação | ✅ concluída (aguardando aprovação) |
 | 3 — Assistente de conteúdo e revisão | ⏳ |
 | 4 — Fila, geração de imagem e conferência | ⏳ |
 | 5 — Interface completa, capas, cartazes e PDF | ⏳ |
@@ -41,6 +41,16 @@ aguardando o teste com chaves reais e `APROVADO FASE 1`.**
 | Tempo limite configurável (padrão 360 s) e até 2 novas tentativas com espera crescente | ✅ | `AI_TIMEOUT`, `AI_RETRIES`, `AI_BACKOFF`; `AbstractImageEngine::generate()` espera 5 s, 10 s; teste "tentativas" |
 | IDs de modelo e preços confirmados e anotados | ✅ (com ressalva) | Tabela "Modelos e preços" abaixo. Os sites oficiais são bloqueados pela rede deste ambiente; os valores vêm de buscas que citam as páginas oficiais e devem ser conferidos pelo coordenador |
 | Kit de teste cego: 6 JSONs (3 componentes × 2 anos) | ✅ | `data/exemplos/*.json` + `LEIA-ME.md`; teste "kit" |
+
+## Fase 2 — critérios de aceite
+
+| Critério | Status | Evidência |
+|---|---|---|
+| `schema.sql` roda duas vezes seguidas sem erro | ✅ | teste "schema: roda duas vezes" (13 tabelas, todas `utf8mb4_unicode_ci`); importado 2× no MariaDB local |
+| Importação BNCC carrega todas as habilidades; quantidade e códigos conhecidos; rejeita inexistente | ✅ | 1.721 registros (93 EI + 1.304 EF + 183 EM + 141 Computação); `EF04CI01`, `EF67LP08`, `EM13LGG103` conferidos; `EF04CI99` rejeitado; `tools/import_bncc.php` |
+| Testes de login: senha errada, bloqueio após 5 tentativas, CSRF ausente rejeitado, sessão regenerada | ✅ | `tests/cases/fase2_auth.php` + verificação HTTP (cookie de sessão muda no login) |
+| Professor não acessa telas de admin | ✅ | teste "permissão": 403 em `/admin/*` para professor e coordenador; 302 para anônimo; 200 para admin |
+| Aceite do termo registrado com data, hora e IP | ✅ | tabela `consents` (`accepted_at`, `ip`, `user_agent`, versão); teste "termo" |
 
 ## Modelos e preços (consultados em 16/10/2026)
 
@@ -103,7 +113,21 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
     POST exige CSRF (regra de todas as fases).
 11. **Motor de texto real fica para a Fase 3**; na Fase 1 `TextEngine` só tem
     a implementação simulada.
-12. **Imagens de referência** do coordenador salvas em
+12. **Fase 2 — base BNCC** do dataset aberto `bncc-dev/bncc-dados` (CC BY 4.0,
+    commit em `data/bncc/VERSAO-commit.txt`), incluindo o complemento de
+    Computação (141 registros, `source = computacao-2022`). Mapeamento: EI usa
+    o grupo etário como "ano" (`bebes`, `criancas_bem_pequenas`,
+    `criancas_pequenas`) e o campo de experiência como componente; EM sem
+    componente usa a área; EF divide-se em Anos Iniciais/Finais pelos anos.
+13. **Autenticação própria** (sem biblioteca): `password_hash`, bloqueio de 15
+    min após 5 erros, token CSRF por sessão, `session_regenerate_id` no login,
+    recuperação por e-mail com token sha256 de uso único (60 min), senha
+    provisória com troca obrigatória, termo de uso versionado (`TERM_VERSION`).
+    Guardas de rota em `App\Guard`; `/poc` agora exige admin.
+14. **E-mail** via `mail()` do PHP (HostGator/HestiaCP) com `MAIL_DRIVER=log`
+    nos testes. Se o `mail()` do HostGator for bloqueado, trocar por SMTP é um
+    ajuste só em `app/services/Mailer.php`.
+15. **Imagens de referência** do coordenador salvas em
    `templates/styles/referencias/` e descritas em `templates/styles/REFERENCIAS.md`,
    com um mapa inicial de 6 estilos a confirmar na Fase 1.
 
@@ -120,17 +144,15 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
   funções de janela, chaves únicas/índices em VARCHAR com no máximo 191
   caracteres, `JSON` apenas como armazenamento (sem depender de índices JSON).
 
-## Pendências para a Fase 2
+## Pendências para a Fase 3
 
-- Coordenador: testar os motores reais pela página `/poc` (ou autorizar os
-  hosts `api.openai.com` e os sites de documentação na rede deste ambiente e
-  cadastrar as chaves como segredos) e conferir os preços nas páginas oficiais.
-- Confirmar os nomes dos 6 estilos (`cartoon_infantil`, `doodle_escolar`,
-  `colagem_adesivos`, `infografico_limpo`, `jovem_cinematografico`,
-  `epico_realista`) — serão as linhas iniciais da tabela `styles`.
-- Fase 2: `schema.sql` completo, importador BNCC, autenticação; a página
-  `/poc` passa a exigir perfil admin em vez de `POC_ACCESS_KEY`.
-- Fase 3: adaptador real de texto (Gemini) com saída JSON.
+- Coordenador: no servidor, importar `schema.sql` + `seeds.sql`, entrar como
+  admin, importar a BNCC pela tela e trocar o e-mail do admin inicial.
+- Coordenador: confirmar o teste dos motores reais pela `/poc` e os preços.
+- Fase 3: assistente de conteúdo (etapa → ano → componente → habilidade →
+  tema), adaptador real de texto (Gemini) com saída JSON, validador do esquema
+  usando `BnccSkill::validateFor()`, editor de revisão, plano de aula em PDF,
+  "Meus projetos" (tabelas `projects`/`pages` já existem).
 
 ## Ambiente de desenvolvimento (contêiner do Claude Code)
 

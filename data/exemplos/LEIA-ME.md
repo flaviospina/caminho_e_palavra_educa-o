@@ -17,5 +17,5 @@ BNCC foram escritos a partir da base oficial e serão validados automaticamente
 contra a tabela `bncc_skills` na Fase 2.
 
 Como usar:
-- Navegador: `/poc` (chave `POC_ACCESS_KEY` do `.env`) → escolher o exemplo, a página e os motores.
+- Navegador: `/poc` (perfil admin) → escolher o exemplo, a página e os motores.
 - Terminal: `php tools/poc_generate.php data/exemplos/ef04_ciencias_misturas.json --pagina=1`

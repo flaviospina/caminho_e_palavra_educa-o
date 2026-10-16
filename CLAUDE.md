@@ -88,3 +88,10 @@ um prompt-modelo `.txt` por estilo). Exemplos em `data/exemplos/`. Ao criar
 uma classe nova, rode `composer dump-autoload --optimize` e versione `vendor/`.
 Modelos de IA e preços confirmados: ver "Modelos e preços" em `PROGRESSO.md`
 (os IDs `-preview` do Gemini citados no prompt-mestre foram desligados).
+Autenticação: `App\Auth` (login, bloqueio, perfis), `App\Guard` (guardas de
+rota: `Guard::auth`, `Guard::admin`, `Guard::roles`), `App\Csrf`, `App\Session`;
+modelos em `app/models/`. Base BNCC: `data/bncc/` (dataset bncc-dados, CC BY
+4.0) → `App\Services\BnccImporter` → tabela `bncc_skills`;
+`BnccSkill::validateFor()` é a validação oficial de código/etapa/ano/componente.
+Testes: `tests/bootstrap.php` aplica `schema.sql` + `seeds.sql` no banco de
+teste e oferece `teste_logar()`, `teste_criar_usuario()`, `teste_aceitar_termo()`.

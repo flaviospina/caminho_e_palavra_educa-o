@@ -93,19 +93,38 @@ escrita", no Gerenciador de Arquivos clique com o botão direito em `storage`
 → *Change Permissions* → `755` (marque "aplicar às subpastas"). As pastas
 privadas respondem 403 ou 404; ambos significam "bloqueado".
 
-### A6b. Banco: importar o `sql/schema.sql`
+### A6b. Banco: importar `sql/schema.sql` e `sql/seeds.sql`
 
 phpMyAdmin → selecione o banco → aba **Importar** → escolha `sql/schema.sql`
-→ Executar. O arquivo pode ser importado de novo a cada fase sem apagar nada.
+→ Executar. Repita com `sql/seeds.sql` (perfis, 6 estilos, escola de teste e o
+administrador inicial). Os dois arquivos podem ser importados de novo a cada
+fase sem apagar nada.
+
+### A6d. Primeiro acesso e usuários
+
+1. Abra `https://cecapescs.com.br/materiais/entrar` e entre com
+   `admin@cecapescs.com.br` / senha provisória `Mudar@2026`.
+2. O sistema pede a troca da senha e o aceite do termo de uso (registrado com
+   data, hora e IP).
+3. Menu **Base BNCC** → **Importar a base BNCC agora** (1.721 habilidades do
+   dataset aberto bncc-dados; leva poucos segundos).
+4. Menu **Escolas** → cadastre as escolas. Menu **Usuários** → cadastre
+   professores e coordenadores: o sistema gera uma senha provisória, mostra na
+   tela e envia por e-mail (`MAIL_DRIVER=mail` usa o `mail()` do PHP do HostGator;
+   confira `MAIL_FROM` no `.env`, de preferência um e-mail do próprio domínio).
+5. Se alguém errar a senha 5 vezes, a conta fica bloqueada por 15 minutos;
+   "Esqueci minha senha" envia um link válido por 60 minutos, e o admin pode
+   gerar uma nova senha provisória em **Usuários → nova senha**.
+6. Troque o e-mail do administrador inicial para o seu em **Usuários → editar**.
 
 ### A6c. Prova de conceito dos motores de IA (`/poc`)
 
-1. No `.env`, defina `POC_ACCESS_KEY=<uma senha sua>` (vazio desliga a página).
+1. Entre como administrador (a página `/poc` é restrita ao perfil admin).
 2. Para testar sem gastar créditos, mantenha `AI_MOCK=1`.
 3. Para testar os motores reais: `AI_MOCK=0`, `GEMINI_API_KEY=...`,
    `OPENAI_API_KEY=...`, e confira `GEMINI_IMAGE_MODEL`, `OPENAI_IMAGE_MODEL`,
    `IMAGE_QUALITY`. Cada geração consome créditos.
-4. Abra `https://cecapescs.com.br/materiais/poc`, entre com a chave, escolha um
+4. Abra `https://cecapescs.com.br/materiais/poc`, escolha um
    exemplo, a página e os motores, e clique em **Gerar**. A geração pode levar
    alguns minutos; as imagens ficam em `storage/poc/<execução>/` e cada
    chamada é registrada em `usage_log` (tabela ao final da página).
@@ -224,7 +243,7 @@ servidos como estáticos). Nada em `storage/` executa PHP. Os arquivos
 ### B8b. Prova de conceito dos motores (`/poc`) e `schema.sql`
 
 Igual à Parte A (A6b e A6c): importe `sql/schema.sql` no phpMyAdmin do
-HestiaCP e defina `POC_ACCESS_KEY` no `.env`. Pelo terminal web também é
+HestiaCP e entre como admin. Pelo terminal web também é
 possível rodar `php tools/poc_generate.php data/exemplos/<arquivo>.json --pagina=1`.
 
 ### B9. Rodar os testes no servidor (opcional, recomendado)
