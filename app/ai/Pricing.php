@@ -48,6 +48,27 @@ final class Pricing
         ],
     ];
 
+    /**
+     * Modelos de TEXTO: US$ por 1 milhão de tokens de entrada e de saída.
+     * gemini-3.8-flash: 3.7-flash foi descontinuado e é redirecionado para 3.8 (out/2026);
+     * valor de referência do 3.7 (introdutório até 31/12/2026) — confirmar na página oficial.
+     */
+    public const TEXT_MODELS = [
+        'gemini-3.8-flash' => ['input_per_m' => 0.75, 'output_per_m' => 3.75],
+        'gemini-3.7-flash' => ['input_per_m' => 0.75, 'output_per_m' => 3.75],
+        'gemini-3.5-flash' => ['input_per_m' => 1.50, 'output_per_m' => 9.00],
+        'gemini-3.1-pro'   => ['input_per_m' => 2.00, 'output_per_m' => 12.00],
+    ];
+
+    public static function estimateText(string $model, int $inputTokens, int $outputTokens): float
+    {
+        $p = self::TEXT_MODELS[$model] ?? null;
+        if ($p === null) {
+            return 0.0;
+        }
+        return round($inputTokens * $p['input_per_m'] / 1_000_000 + $outputTokens * $p['output_per_m'] / 1_000_000, 5);
+    }
+
     /** Custo estimado: por tokens quando disponíveis, senão por imagem. */
     public static function estimate(string $model, ?int $inputTokens, ?int $outputTokens, string $tier): float
     {

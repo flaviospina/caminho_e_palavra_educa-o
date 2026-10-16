@@ -37,15 +37,73 @@ final class MockEngine implements ImageEngine, TextEngine
         return ImageResult::fromPng($png, $this->name(), $this->model(), $ms, strlen($request->prompt) >> 2, 1120, 0.0, 1, ['simulado' => true]);
     }
 
-    /** Texto simulado: devolve o JSON de exemplo de Ciências (4º ano). */
+    /**
+     * Texto simulado: monta um conteúdo coerente com o pedido embutido no prompt
+     * ("Dados do pedido (JSON): {...}"). Sem pedido, devolve o exemplo de Ciências.
+     */
     public function generateJson(string $systemPrompt, string $userPrompt): array
     {
-        $file = ROOT_PATH . '/data/exemplos/ef04_ciencias_misturas.json';
-        $data = json_decode((string) @file_get_contents($file), true);
-        if (!is_array($data)) {
-            throw new AiException('Exemplo simulado de conteúdo não encontrado.', $file);
+        $req = null;
+        if (preg_match('/Dados do pedido \(JSON\):\s*(\{[^\n]*\})/', $userPrompt, $m)) {
+            $req = json_decode($m[1], true);
         }
-        return $data;
+        if (!is_array($req)) {
+            $file = ROOT_PATH . '/data/exemplos/ef04_ciencias_misturas.json';
+            $data = json_decode((string) @file_get_contents($file), true);
+            if (!is_array($data)) {
+                throw new AiException('Exemplo simulado de conteúdo não encontrado.', $file);
+            }
+            return $data;
+        }
+        if (str_contains($userPrompt, 'SIMULAR_JSON_INVALIDO')) {
+            return ['tipo' => 'apostila', 'paginas' => []];   // para os testes do validador
+        }
+        $tema = (string) ($req['tema'] ?? 'Tema');
+        $comp = (string) ($req['componente'] ?? '');
+        $ano = \App\Models\BnccSkill::yearLabel((string) ($req['etapa'] ?? ''), (string) ($req['ano'] ?? ''));
+        $habs = [];
+        $habItens = [];
+        foreach ($req['habilidades'] ?? [] as $h) {
+            $code = (string) ($h['codigo'] ?? '');
+            $resumo = mb_substr('Desenvolver ' . mb_strtolower($tema) . ' conforme a habilidade ' . $code . '.', 0, 200);
+            $habs[] = ['codigo' => $code, 'resumo' => $resumo];
+            $habItens[] = mb_substr($code . ' – ' . mb_strtolower($tema), 0, 80);
+        }
+        $n = max(1, (int) ($req['paginas'] ?? 1));
+        $tipos = $req['tipos_paginas'] ?? [];
+        $t = fn(string $s, int $max) => mb_substr($s, 0, $max);
+        $paginas = [[
+            'numero' => 1, 'tipo' => 'abertura', 'titulo' => $t($tema, 30), 'subtitulo' => $t('Começando a estudar ' . mb_strtolower($tema), 60),
+            'blocos' => [
+                ['n' => '01', 'titulo' => 'Objetivo', 'texto' => $t('Compreender ' . mb_strtolower($tema) . ' com exemplos do dia a dia.', 150)],
+                ['n' => '02', 'titulo' => 'O que você vai aprender', 'itens' => ['Ideias principais', 'Exemplos do cotidiano', 'Como aplicar']],
+                ['n' => '03', 'titulo' => 'Habilidades BNCC', 'itens' => $habItens],
+                ['n' => '04', 'titulo' => 'Por que é importante', 'itens' => ['Ajuda a entender o mundo', 'Base para os próximos temas']],
+                ['n' => '05', 'titulo' => 'Como vamos estudar', 'itens' => ['Leitura e conversa', 'Exemplos', 'Atividade final']],
+                ['n' => '06', 'titulo' => 'Nas próximas páginas', 'itens' => array_map(fn($i) => "Página {$i} – " . ($tipos[$i - 1] ?? 'conteúdo'), range(2, max(2, $n)))],
+            ],
+            'rodape' => $t('Vamos aprender juntos sobre ' . mb_strtolower($tema) . '.', 90),
+        ]];
+        for ($i = 2; $i <= $n; $i++) {
+            $tipo = $tipos[$i - 1] ?? ($i === $n ? 'pratica' : 'explicacao');
+            $paginas[] = [
+                'numero' => $i, 'tipo' => $tipo,
+                'titulo' => $t(($tipo === 'pratica' ? 'Mão na massa: ' : 'Entendendo ') . mb_strtolower($tema), 30),
+                'subtitulo' => $t($tipo === 'pratica' ? 'Atividades para praticar' : 'Conceitos e exemplos', 60),
+                'blocos' => [
+                    ['n' => '01', 'titulo' => $tipo === 'pratica' ? 'Atividade 1' : 'Conceito', 'texto' => $t('Texto simulado sobre ' . mb_strtolower($tema) . ' para ' . $ano . ' de ' . $comp . '.', 150)],
+                    ['n' => '02', 'titulo' => $tipo === 'pratica' ? 'Desafio' : 'Exemplo', 'itens' => ['Primeiro item', 'Segundo item', 'Terceiro item']],
+                    ['n' => '03', 'titulo' => $tipo === 'pratica' ? 'Para conversar' : 'Lembre-se', 'texto' => $t('Pergunta ou lembrete simulado sobre ' . mb_strtolower($tema) . '.', 150)],
+                ],
+                'rodape' => $t('Página simulada ' . $i . ' sobre ' . mb_strtolower($tema) . '.', 90),
+            ];
+        }
+        return [
+            'tipo' => 'apostila', 'etapa' => (string) ($req['etapa'] ?? ''), 'ano' => (string) ($req['ano'] ?? ''), 'componente' => $comp,
+            'habilidades' => $habs, 'tema' => $tema, 'finalidade' => (string) ($req['finalidade'] ?? 'introducao'), 'estilo' => (string) ($req['estilo'] ?? 'doodle_escolar'),
+            'capa' => ['texto_superior' => $t($comp . ' · ' . $ano, 60), 'titulo' => $t($tema, 30), 'subtitulo' => $t('Um material simulado sobre ' . mb_strtolower($tema), 60), 'frase_inferior' => 'Aprender é descobrir.'],
+            'paginas' => $paginas,
+        ];
     }
 
     // ── desenho ──────────────────────────────────────────────────────────

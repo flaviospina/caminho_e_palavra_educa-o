@@ -16,6 +16,9 @@ final class EngineFactory
         'AI_TIMEOUT'         => '360',
         'AI_RETRIES'         => '2',
         'AI_BACKOFF'         => '5',
+        'TEXT_ENGINE'        => 'gemini',
+        'GEMINI_TEXT_MODEL'  => 'gemini-3.8-flash',
+        'TEXT_TIMEOUT'       => '120',
     ];
 
     /** @param array<string,string> $overrides valores que substituem o .env (testes) */
@@ -78,9 +81,22 @@ final class EngineFactory
         throw new AiException("Motor de imagem desconhecido: {$name}. Use gemini, openai ou mock.");
     }
 
-    /** Motor de texto (Fase 1: sempre simulado; o adaptador real chega na Fase 3). */
+    /** Motor de texto: TEXT_ENGINE=gemini (padrão) ou mock; com AI_MOCK=1 é sempre simulado. */
     public function textEngine(): TextEngine
     {
-        return new MockEngine('mock', 'mock-text-v1');
+        $name = strtolower(trim($this->setting('TEXT_ENGINE')));
+        if ($this->mock() || $name === 'mock') {
+            return new MockEngine('mock', 'mock-text-v1');
+        }
+        if ($name === 'gemini') {
+            return new GeminiText(
+                (string) env('GEMINI_API_KEY', ''),
+                $this->setting('GEMINI_TEXT_MODEL'),
+                max(10, (int) $this->setting('TEXT_TIMEOUT')),
+                max(0, (int) $this->setting('AI_RETRIES')),
+                max(0.0, (float) $this->setting('AI_BACKOFF')) / 2
+            );
+        }
+        throw new AiException("Motor de texto desconhecido: {$name}. Use gemini ou mock.");
     }
 }
