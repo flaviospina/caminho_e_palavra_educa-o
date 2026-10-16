@@ -58,6 +58,7 @@ Teste::caso('poc: erro de um motor não derruba a execução e fica registrado c
     Teste::falso($run['resultados'][0]['ok']);
     Teste::igual('chave_invalida', $run['resultados'][0]['tipo_erro']);
     Teste::contem('não está configurada', $run['resultados'][0]['mensagem']);
+    Teste::igual('apiKey vazia', $run['resultados'][0]['detalhe'], 'Detalhe técnico disponível na PoC (admin)');
     $rows = UsageLog::recent(5, $run['run_id']);
     Teste::igual('erro', $rows[0]['status']);
     Teste::contem('não está configurada', (string) $rows[0]['error_message']);

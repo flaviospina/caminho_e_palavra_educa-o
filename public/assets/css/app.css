@@ -95,6 +95,7 @@ button.link { background: none; border: 0; color: var(--azul); cursor: pointer; 
 .comparacao img { width: 100%; height: auto; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; }
 .comparacao figcaption { font-size: 0.85rem; color: var(--cinza-600); margin-top: 0.4rem; }
 .falha { background: #fee2e2; color: #991b1b; border-radius: 8px; padding: 1rem; min-height: 6rem; }
+.detalhe-tecnico { display: block; margin-top: 0.4rem; color: #7f1d1d; font-family: ui-monospace, monospace; font-size: 0.75rem; word-break: break-word; }
 .tabela-rolagem { overflow-x: auto; }
 .tabela { border-collapse: collapse; font-size: 0.85rem; width: 100%; }
 .tabela th, .tabela td { border-bottom: 1px solid #e2e8f0; padding: 0.4rem 0.5rem; text-align: left; white-space: nowrap; }

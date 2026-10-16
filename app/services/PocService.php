@@ -126,7 +126,7 @@ final class PocService
                 'prompt_chars' => mb_strlen($request->prompt), 'duration_ms' => $ms, 'cost_usd' => 0,
                 'status' => 'erro', 'error_message' => $e->getMessage(),
             ]);
-            return ['motor' => $engine->name(), 'modelo' => $engine->model(), 'ok' => false, 'tipo_erro' => $e->kind, 'tempo_ms' => $ms, 'mensagem' => $e->getMessage()];
+            return ['motor' => $engine->name(), 'modelo' => $engine->model(), 'ok' => false, 'tipo_erro' => $e->kind, 'tempo_ms' => $ms, 'mensagem' => $e->getMessage(), 'detalhe' => mb_substr($e->detail, 0, 600)];
         } catch (Throwable $e) {
             $ms = (int) round((microtime(true) - $start) * 1000);
             Log::error('PoC: erro inesperado', ['motor' => $engine->name(), 'erro' => $e->getMessage(), 'arquivo' => $e->getFile(), 'linha' => $e->getLine()]);

@@ -44,7 +44,8 @@
               <a href="<?= e(url('/poc/imagem/' . $ex['run_id'] . '/' . $r['arquivo'])) ?>" target="_blank"><img src="<?= e(url('/poc/imagem/' . $ex['run_id'] . '/' . $r['arquivo'])) ?>" alt="Página gerada por <?= e($r['motor']) ?>" loading="lazy"></a>
               <figcaption><strong><?= e($r['motor']) ?></strong> · <?= e($r['modelo']) ?><br><?= e($r['largura']) ?>×<?= e($r['altura']) ?> · <?= e(number_format($r['tempo_ms'] / 1000, 1, ',', '.')) ?> s · US$ <?= e(number_format((float) $r['custo_usd'], 3, ',', '.')) ?> · tentativas: <?= e($r['tentativas']) ?></figcaption>
             <?php else: ?>
-              <div class="falha"><strong><?= e($r['motor']) ?></strong><br><?= e($r['mensagem']) ?></div>
+              <div class="falha"><strong><?= e($r['motor']) ?></strong><br><?= e($r['mensagem']) ?>
+                <?php if (!empty($r['detalhe'])): ?><br><small class="detalhe-tecnico">Resposta da API: <?= e($r['detalhe']) ?></small><?php endif; ?></div>
             <?php endif; ?>
           </figure>
         <?php endforeach; ?>
