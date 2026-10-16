@@ -1,0 +1,19 @@
+# storage/.htaccess — só a subpasta public/ é visível ao navegador.
+# Observação: no Apache, o .htaccess de uma subpasta substitui as regras de
+# reescrita da pasta pai, por isso estas regras ficam aqui e não na raiz.
+# Não usamos "Require all denied" nesta pasta porque a verificação de acesso
+# acontece ANTES da reescrita e impediria o atalho /storage/arquivo → public/.
+Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # /storage/ e /storage/qualquer-pasta-privada → 404
+    RewriteRule ^$ - [R=404,L]
+    RewriteRule ^public/.+\.(php|phtml|phar)$ - [R=404,L]
+    # /storage/arquivo.png → storage/public/arquivo.png (se não existir, 404)
+    RewriteRule ^(?!public/)(.+)$ public/$1 [L]
+</IfModule>
+<IfModule !mod_rewrite.c>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</IfModule>

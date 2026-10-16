@@ -8,5 +8,5 @@
   <?php if (!empty($detalhe)): ?>
   <pre class="detalhe"><?= e($detalhe) ?></pre>
   <?php endif; ?>
-  <p><a class="botao" href="<?= e(BASE_URL) ?>/">Voltar ao início</a></p>
+  <p><a class="botao" href="<?= e(url('/')) ?>">Voltar ao início</a></p>
 </section>

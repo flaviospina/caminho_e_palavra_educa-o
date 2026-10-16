@@ -67,6 +67,18 @@ define('APP_NAME', env('APP_NAME', 'Materiais Visuais CECAPE'));
 define('APP_ENV', env('APP_ENV', 'production'));
 define('APP_DEBUG', env_bool('APP_DEBUG', false));
 define('BASE_URL', rtrim((string) env('BASE_URL', ''), '/'));
+
+// Prefixo do caminho quando o sistema roda em subpasta (ex.: /materiais no
+// HostGator). Vem do BASE_URL; sem BASE_URL, é deduzido do SCRIPT_NAME
+// (/materiais/public/index.php → /materiais). Vazio na raiz do domínio.
+$basePath = BASE_URL !== '' ? (string) parse_url(BASE_URL, PHP_URL_PATH) : '';
+if ($basePath === '' && PHP_SAPI !== 'cli' && isset($_SERVER['SCRIPT_NAME'])) {
+    $dir = str_replace('\\', '/', dirname((string) $_SERVER['SCRIPT_NAME']));
+    $dir = (string) preg_replace('#/public$#', '', $dir);
+    $basePath = in_array($dir, ['/', '.', ''], true) ? '' : $dir;
+}
+define('BASE_PATH', rtrim($basePath, '/'));
+unset($basePath, $dir);
 define('APP_VERSION', '0.0.1');
 
 define('DB_HOST', env('DB_HOST', '127.0.0.1'));

@@ -1,0 +1,35 @@
+# public/.htaccess — controlador frontal no Apache (HostGator).
+# No nginx (cecape-server) o equivalente é o try_files de deploy/nginx.conf.example.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Endereço canônico: /materiais/public/... → /materiais/... (301).
+    # Fica aqui, e não na raiz, porque este .htaccess substitui as regras do pai.
+    # (QSA preserva a query string; NE evita codificar duas vezes o caminho.)
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s(.*?)/public(/[^\s?]*)?[\s?] [NC]
+    RewriteRule ^(.*)$ %1%2 [R=301,L,QSA,NE]
+
+    # Arquivos e pastas reais (assets, storage) são servidos diretamente;
+    # qualquer outro caminho vai para o roteador.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Nenhum arquivo iniciado por ponto é servido
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

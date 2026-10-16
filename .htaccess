@@ -1,0 +1,29 @@
+# .htaccess (raiz do projeto) — usado só no HostGator/Apache, quando o sistema
+# é instalado em subpasta (ex.: public_html/materiais). No cecape-server (nginx)
+# este arquivo é ignorado. Encaminha tudo para public/ e bloqueia o resto.
+#
+# Atenção: no Apache, um .htaccess dentro de uma subpasta SUBSTITUI as regras
+# de reescrita deste arquivo para aquela subpasta. Por isso as pastas privadas
+# (app/, vendor/, tests/…) têm o seu próprio "Require all denied", storage/ tem
+# as próprias regras e public/ cuida do redirecionamento de /public/. As regras
+# abaixo valem para a raiz e para pastas sem .htaccess próprio.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Arquivos sensíveis
+    RewriteRule (^|/)\.(env|git|htaccess|htpasswd) - [R=404,L]
+    RewriteRule \.(env|sql|md|log|lock|json|example|yml|yaml)$ - [R=404,L]
+
+    # 2. Arquivos gerados públicos (reserva; storage/.htaccess faz o mesmo): /storage/x.png → storage/public/x.png (sem PHP)
+    RewriteRule ^storage/public/.+\.(php|phtml|phar)$ - [R=404,L]
+    RewriteRule ^storage/(?!public/)(.+)$ storage/public/$1 [L]
+
+    # 3. Pastas privadas (reserva; cada pasta tem o seu .htaccess)
+    RewriteRule ^(app|vendor|tests|sql|data|deploy|docs|templates|workers|tools)(/|$) - [R=404,L]
+    RewriteRule ^storage(/(?!public/).*)?$ - [R=404,L]
+
+    # 4. Tudo o mais vai para public/
+    RewriteRule ^(?!public/|storage/public/)(.*)$ public/$1 [L]
+</IfModule>

@@ -4,13 +4,103 @@ Sistema web para professores da rede municipal de São Caetano do Sul criarem,
 com IA, apostilas visuais A4, cartazes de eventos e planos de aula alinhados à
 BNCC. Backend PHP 8.2 + MySQL 8, frontend HTML/CSS/JS com Alpine.js, sem build.
 
-Este documento explica como **instalar e atualizar no cecape-server (HestiaCP)**
-usando apenas o navegador: painel do HestiaCP, seu terminal web e o phpMyAdmin.
-Nenhum passo exige terminal no seu computador.
+Este documento explica como **instalar e atualizar** usando apenas o navegador.
+Nenhum passo exige terminal no seu computador. Há dois cenários:
+
+- **Parte A — HostGator (cPanel, Apache), em subpasta** do domínio
+  `cecapescs.com.br` (`https://cecapescs.com.br/materiais`). Hospedagem
+  temporária enquanto o cecape-server não está disponível.
+- **Parte B — cecape-server (HestiaCP, nginx)**, destino definitivo.
 
 ---
 
-## 1. Pré-requisitos no servidor
+## Parte A — HostGator (cPanel) em subpasta
+
+### A1. Enviar o código
+
+Opção 1 (recomendada): cPanel → **Git™ Version Control** → **Criar** →
+*Clone a Repository* com a URL `https://github.com/flaviospina/caminho_e_palavra_educa-o`,
+caminho `public_html/materiais`, branch `main`. Para atualizar depois, abra o
+repositório em *Manage* → *Pull or Deploy* → **Update from Remote**.
+
+Opção 2: baixe o ZIP do GitHub (*Code → Download ZIP*), envie pelo
+**Gerenciador de Arquivos** para `public_html/materiais` e extraia (os arquivos
+devem ficar direto em `public_html/materiais/`, não numa subpasta do ZIP).
+
+A pasta `vendor/` já vem no repositório; não é preciso rodar `composer`.
+
+### A2. PHP
+
+cPanel → **Select PHP Version** (ou *MultiPHP Manager*): escolha **8.2** e
+marque as extensões `pdo_mysql`, `mbstring`, `curl`, `gd`, `openssl`,
+`fileinfo`, `json`, `intl`, `zip`.
+
+### A3. Banco de dados
+
+cPanel → **Bancos de Dados MySQL®**: crie o banco `materiais` e o usuário
+`materiais` (o cPanel adiciona o prefixo da conta, ex.: `cecap_materiais`),
+dê **todos os privilégios** e anote a senha. Crie também `materiais_test` se
+quiser rodar os testes no servidor.
+
+### A4. Configurar o `.env`
+
+No Gerenciador de Arquivos, em `public_html/materiais/`, copie `.env.example`
+para `.env` e edite:
+
+```
+APP_ENV=production
+APP_DEBUG=0
+BASE_URL=https://cecapescs.com.br/materiais
+DB_HOST=localhost
+DB_NAME=cecap_materiais
+DB_USER=cecap_materiais
+DB_PASS=<senha>
+AI_MOCK=1
+```
+
+O `BASE_URL` com `/materiais` no final é o que faz o sistema funcionar em
+subpasta. Se usar outro nome de pasta, troque aqui.
+
+### A5. Como o Apache enxerga a pasta
+
+Os arquivos `.htaccess` já versionados fazem tudo:
+
+- `materiais/.htaccess` encaminha qualquer endereço para `public/`, redireciona
+  `/materiais/public/...` para `/materiais/...` e responde **404** para `.env`,
+  `app/`, `vendor/`, `storage/` (exceto `storage/public/`), `tests/` etc.
+- `public/.htaccess` envia tudo que não é arquivo real para `index.php`.
+- `app/`, `vendor/`, `storage/` e outras pastas têm `Require all denied`.
+
+Se o cPanel pedir, mantenha `AllowOverride All` (padrão no HostGator).
+
+### A6. Conferir
+
+1. `https://cecapescs.com.br/materiais/` → página inicial com "Estado do sistema".
+2. `https://cecapescs.com.br/materiais/health` → HTTP 200 com `"status": "ok"`.
+3. `https://cecapescs.com.br/materiais/.env` e
+   `https://cecapescs.com.br/materiais/app/config.php` → **404**.
+4. `https://cecapescs.com.br/materiais/public/` → redireciona para
+   `https://cecapescs.com.br/materiais/`.
+
+Se `/health` responder 503 com "Pasta de armazenamento sem permissão de
+escrita", no Gerenciador de Arquivos clique com o botão direito em `storage`
+→ *Change Permissions* → `755` (marque "aplicar às subpastas"). As pastas
+privadas respondem 403 ou 404; ambos significam "bloqueado".
+
+### A7. Limitações no HostGator
+
+- Não há `systemd`: o worker de geração (Fase 4) rodará por **Cron Job** do
+  cPanel (intervalo mínimo de 5 min) enquanto o sistema estiver aqui.
+- Tempo máximo de execução PHP é limitado pelo plano; gerações longas de
+  imagem ficam na fila, nunca na requisição web.
+
+---
+
+## Parte B — cecape-server (HestiaCP)
+
+---
+
+### B1. Pré-requisitos no servidor
 
 - Ubuntu 24.04 com HestiaCP, nginx, MySQL 8 e PHP 8.2 (fpm) com as extensões
   `pdo_mysql`, `mbstring`, `curl`, `gd`, `openssl`, `fileinfo`, `json`.
@@ -18,7 +108,7 @@ Nenhum passo exige terminal no seu computador.
 - Um domínio ou subdomínio apontado para o servidor, ex.
   `materiais.cecapescs.com.br`, com SSL (Let's Encrypt pelo HestiaCP).
 
-## 2. Criar o domínio no HestiaCP
+### B2. Criar o domínio no HestiaCP
 
 1. Entre no HestiaCP → **Web** → **Adicionar domínio web**.
 2. Informe o domínio (ex.: `materiais.cecapescs.com.br`), marque
@@ -27,7 +117,7 @@ Nenhum passo exige terminal no seu computador.
 4. Salve. O HestiaCP cria a pasta
    `/home/<usuário>/web/<domínio>/public_html/`.
 
-## 3. Criar o banco de dados
+### B3. Criar o banco de dados
 
 1. HestiaCP → **DB** → **Adicionar banco de dados**.
 2. Nome: `materiais`; usuário: `materiais`; senha forte (anote).
@@ -35,7 +125,7 @@ Nenhum passo exige terminal no seu computador.
 3. Repita para o banco de testes: `materiais_test` (mesmo usuário).
 4. O HestiaCP mostra o nome completo (ex.: `cecape_materiais`); use-o no `.env`.
 
-## 4. Baixar o código (primeira vez)
+### B4. Baixar o código (primeira vez)
 
 1. HestiaCP → ícone de **Terminal** (canto superior direito) → abre o terminal web.
 2. Execute (troque `<usuário>` e `<domínio>`):
@@ -46,7 +136,7 @@ Nenhum passo exige terminal no seu computador.
    Se o repositório for privado, o HestiaCP pedirá usuário e *token* do GitHub.
 3. A pasta `vendor/` já vem no repositório. **Não** é preciso rodar `composer`.
 
-## 5. Configurar o `.env`
+### B5. Configurar o `.env`
 
 1. HestiaCP → **Arquivos** (gerenciador de arquivos) → abra
    `web/<domínio>/public_html/`.
@@ -59,7 +149,7 @@ Nenhum passo exige terminal no seu computador.
    o banco `materiais_test`.
 4. Permissões: o `.env` fica **fora** de `public/`; o nginx nunca o serve.
 
-## 6. Apontar o nginx para a pasta `public/`
+### B6. Apontar o nginx para a pasta `public/`
 
 O sistema só publica a pasta `public/`. Há duas formas:
 
@@ -83,7 +173,7 @@ Em qualquer das formas, confirme que:
 Depois: HestiaCP → Web → domínio → **Reiniciar** (ou terminal web:
 `sudo systemctl reload nginx`).
 
-## 7. Pastas graváveis
+### B7. Pastas graváveis
 
 No terminal web:
 ```
@@ -91,9 +181,10 @@ cd /home/<usuário>/web/<domínio>/public_html
 chmod -R u+rwX storage
 ```
 O `public/storage` é um link simbólico para `storage/public` (arquivos gerados
-servidos como estáticos). Nada em `storage/` executa PHP.
+servidos como estáticos). Nada em `storage/` executa PHP. Os arquivos
+`.htaccess` do repositório são ignorados pelo nginx.
 
-## 8. Conferir
+### B8. Conferir
 
 1. Abra `https://<domínio>/` — a página inicial mostra o "Estado do sistema".
 2. Abra `https://<domínio>/health` — deve responder HTTP 200 com
@@ -102,7 +193,7 @@ servidos como estáticos). Nada em `storage/` executa PHP.
 3. Abra `https://<domínio>/.env` e `https://<domínio>/app/config.php` — ambos
    devem dar **404**.
 
-## 9. Rodar os testes no servidor (opcional, recomendado)
+### B9. Rodar os testes no servidor (opcional, recomendado)
 
 No terminal web:
 ```
@@ -112,7 +203,7 @@ php tests/run.php
 Resultado esperado: `N testes, 0 falhas ✅`. Os testes usam `.env.test`
 (banco `materiais_test`) e sempre rodam em modo simulado de IA.
 
-## 10. Atualizar (próximas fases)
+### B10. Atualizar (próximas fases)
 
 1. Terminal web do HestiaCP:
    ```
@@ -123,7 +214,7 @@ Resultado esperado: `N testes, 0 falhas ✅`. Os testes usam `.env.test`
    (HestiaCP → DB → phpMyAdmin). O arquivo é idempotente: pode rodar de novo.
 3. Confira `/health` e a página inicial.
 
-## 11. Desenvolvimento local (quando houver PHP instalado)
+### B11. Desenvolvimento local (quando houver PHP instalado)
 
 ```
 cp .env.test.example .env.test   # ajuste DB_*
@@ -131,7 +222,7 @@ php tests/run.php
 cd public && php -S 127.0.0.1:8080 index.php
 ```
 
-## 12. Estrutura resumida
+### B12. Estrutura resumida
 
 ```
 public/        raiz publicada (index.php, assets/, storage → ../storage/public)

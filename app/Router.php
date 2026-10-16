@@ -37,11 +37,15 @@ final class Router
         ];
     }
 
-    /** Resolve a requisição e devolve a resposta; erros viram 404/405/500 amigáveis. */
-    public function dispatch(string $method, string $uri): Response
+    /**
+     * Resolve a requisição e devolve a resposta; erros viram 404/405/500 amigáveis.
+     * $basePath é o prefixo da subpasta (BASE_PATH por padrão) e é removido do caminho.
+     */
+    public function dispatch(string $method, string $uri, ?string $basePath = null): Response
     {
         $method = strtoupper($method);
         $path = self::normalize((string) parse_url($uri, PHP_URL_PATH));
+        $path = self::stripBasePath($path, $basePath ?? BASE_PATH);
         if ($method === 'HEAD') {
             $method = 'GET';
         }
@@ -87,6 +91,22 @@ final class Router
             'mensagem' => $message,
             'detalhe'  => $detail,
         ]), $status);
+    }
+
+    /** Remove o prefixo da subpasta (/materiais/health → /health). */
+    public static function stripBasePath(string $path, string $basePath): string
+    {
+        $basePath = rtrim($basePath, '/');
+        if ($basePath === '') {
+            return $path;
+        }
+        if ($path === $basePath) {
+            return '/';
+        }
+        if (str_starts_with($path, $basePath . '/')) {
+            return self::normalize(substr($path, strlen($basePath)));
+        }
+        return $path;
     }
 
     /** Garante barra inicial e remove barra final (exceto na raiz). */

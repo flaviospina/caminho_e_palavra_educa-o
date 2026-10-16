@@ -60,3 +60,21 @@ Teste::caso('roteador: exceção no controlador vira 500 amigável e vai para o 
 Teste::caso('roteador: saída HTML escapa dados (função e)', function () {
     Teste::igual('&lt;b&gt;&quot;x&quot;&#039;', e('<b>"x"\''));
 });
+
+Teste::caso('roteador: prefixo de subpasta (BASE_PATH) é removido do caminho', function () {
+    Teste::igual('/health', Router::stripBasePath('/materiais/health', '/materiais'));
+    Teste::igual('/', Router::stripBasePath('/materiais', '/materiais'));
+    Teste::igual('/', Router::stripBasePath('/materiais/', '/materiais/'));
+    Teste::igual('/outro/materiais', Router::stripBasePath('/outro/materiais', '/materiais'), 'Só remove no início');
+    Teste::igual('/health', Router::stripBasePath('/health', ''), 'Sem subpasta nada muda');
+    Teste::igual(200, app_router()->dispatch('GET', '/materiais/health', '/materiais')->status);
+    Teste::igual(200, app_router()->dispatch('GET', '/materiais', '/materiais')->status, 'Raiz da subpasta');
+    Teste::igual(404, app_router()->dispatch('GET', '/materiais/nada', '/materiais')->status);
+});
+
+Teste::caso('roteador: url() monta endereços com BASE_URL', function () {
+    $base = BASE_URL !== '' ? BASE_URL : BASE_PATH;
+    Teste::igual($base . '/health', url('/health'));
+    Teste::igual($base . '/health', url('health'));
+    Teste::igual($base . '/', url('/'));
+});

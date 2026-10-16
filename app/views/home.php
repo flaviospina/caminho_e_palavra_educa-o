@@ -34,5 +34,5 @@
       </ul>
     </div>
   </template>
-  <p class="nota">Detalhes em <a href="<?= e(BASE_URL) ?>/health"><code>/health</code></a>.</p>
+  <p class="nota">Detalhes em <a href="<?= e(url('/health')) ?>"><code>/health</code></a>.</p>
 </section>

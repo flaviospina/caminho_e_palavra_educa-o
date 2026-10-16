@@ -43,3 +43,34 @@ Teste::caso('segurança: cookies de sessão HttpOnly e SameSite=Lax', function (
     Teste::igual('Lax', ini_get('session.cookie_samesite'));
     Teste::igual('1', ini_get('session.use_strict_mode'));
 });
+
+Teste::caso('segurança: .htaccess da raiz (HostGator) encaminha para public/ e nega pastas privadas', function () {
+    $ht = file_get_contents(ROOT_PATH . '/.htaccess');
+    Teste::contem('RewriteEngine On', $ht);
+    Teste::contem('Options -Indexes', $ht);
+    Teste::verdadeiro((bool) preg_match('#RewriteRule\s+\(\^\|/\)\\\\\.\(env\|git[^)]*\)\s+-\s+\[R=404#', $ht), 'Nega .env e .git');
+    Teste::verdadeiro((bool) preg_match('#RewriteRule\s+\^\(app\|vendor\|tests\|sql\|data\|deploy\|docs\|templates\|workers\|tools\)\(/\|\$\)\s+-\s+\[R=404#', $ht), 'Nega pastas privadas');
+    Teste::verdadeiro((bool) preg_match('#RewriteRule\s+\^storage\(/\(\?!public/\)\.\*\)\?\$\s+-\s+\[R=404#', $ht), 'Nega storage/ exceto storage/public');
+    Teste::verdadeiro((bool) preg_match('#RewriteRule\s+\^storage/public/\.\+\\\\\.\(php\|phtml\|phar\)\$\s+-\s+\[R=404#', $ht), 'Nega PHP em storage/public');
+    Teste::contem('public/$1 [L]', $ht, 'Encaminha o resto para public/');
+});
+
+Teste::caso('segurança: .htaccess de public/ tem controlador frontal; pastas privadas têm deny', function () {
+    $ht = file_get_contents(ROOT_PATH . '/public/.htaccess');
+    Teste::contem('RewriteCond %{REQUEST_FILENAME} !-f', $ht);
+    Teste::contem('RewriteRule ^ index.php [L]', $ht);
+    Teste::contem('/public(/[^\\s?]*)?', $ht, 'Redireciona /public/ para a raiz da subpasta');
+    Teste::contem('[R=301,L,QSA,NE]', $ht);
+    $st = (string) file_get_contents(ROOT_PATH . '/storage/.htaccess');
+    Teste::contem('RewriteRule ^$ - [R=404,L]', $st, 'storage/ raiz → 404');
+    Teste::contem('RewriteRule ^(?!public/)(.+)$ public/$1 [L]', $st, 'storage/x → storage/public/x');
+    Teste::contem('RewriteRule ^public/.+\.(php|phtml|phar)$ - [R=404,L]', $st);
+    foreach (['app', 'vendor', 'templates', 'tests', 'deploy', 'docs'] as $pasta) {
+        $arq = ROOT_PATH . '/' . $pasta . '/.htaccess';
+        Teste::verdadeiro(is_file($arq), "Falta {$pasta}/.htaccess");
+        Teste::contem('Require all denied', (string) file_get_contents($arq), "{$pasta}/.htaccess sem deny");
+    }
+    $pub = (string) file_get_contents(ROOT_PATH . '/storage/public/.htaccess');
+    Teste::contem('Require all granted', $pub);
+    Teste::contem('FilesMatch "\.(php|phtml|phar)$"', $pub);
+});

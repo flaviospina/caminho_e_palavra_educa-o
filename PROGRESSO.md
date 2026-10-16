@@ -25,10 +25,10 @@
 | Critério | Status | Evidência |
 |---|---|---|
 | `php -l` sem erros em todos os `.php` | ✅ | `find … -name '*.php' -exec php -l` → nenhum erro |
-| `php tests/run.php` passa (config, banco, roteador, /health) | ✅ | 23 testes, 0 falhas |
+| `php tests/run.php` passa (config, banco, roteador, /health) | ✅ | 27 testes, 0 falhas |
 | `/health` 200 `{"status":"ok"}`; 503 com banco desligado, mensagem em PT | ✅ | teste `fase0_health.php` + verificação HTTP com `php -S` e MariaDB parado |
-| `.env` e `app/` inacessíveis pelo navegador | ✅ | `deploy/nginx.conf.example` (root = `public/`, `deny all` para `.*`, `.env/.sql/.md/.log`) validado pelo teste `fase0_seguranca.php` |
-| `LEIA-ME.md` explica a instalação no HestiaCP sem terminal local | ✅ | `LEIA-ME.md` |
+| `.env` e `app/` inacessíveis pelo navegador | ✅ | nginx: `deploy/nginx.conf.example` validado por teste; Apache/HostGator: `.htaccess` validados por teste e por requisições reais num Apache 2.4 local (`/.env`, `/app/config.php`, `/storage/logs/app.log` → 404) |
+| `LEIA-ME.md` explica a instalação sem terminal local | ✅ | `LEIA-ME.md`: Parte A (HostGator/cPanel em subpasta) e Parte B (HestiaCP) |
 
 ## Decisões tomadas
 
@@ -49,7 +49,16 @@
 5. **Função global `e()`** em `app/helpers.php` para escapar saída.
 6. **Cabeçalhos de segurança** (`nosniff`, `SAMEORIGIN`, `Referrer-Policy`)
    enviados em toda resposta por `App\Response::send()`.
-7. **Imagens de referência** do coordenador salvas em
+7. **Hospedagem temporária no HostGator** em `https://cecapescs.com.br/materiais`
+   (cPanel/Apache, subpasta). Ajustes feitos na própria Fase 0: `.htaccess`
+   na raiz (encaminha para `public/`, nega pastas privadas, redireciona
+   `/public/` para a raiz da subpasta), `.htaccess` em `public/` (controlador
+   frontal), `Require all denied` nas pastas privadas, constante `BASE_PATH`
+   e `Router::stripBasePath()` para o prefixo da subpasta, helper `url()`.
+   Validado num Apache 2.4 local com a mesma estrutura de pastas.
+   Limitação: sem `systemd`; o worker (Fase 4) usará Cron Job do cPanel
+   enquanto o sistema estiver no HostGator.
+8. **Imagens de referência** do coordenador salvas em
    `templates/styles/referencias/` e descritas em `templates/styles/REFERENCIAS.md`,
    com um mapa inicial de 6 estilos a confirmar na Fase 1.
 

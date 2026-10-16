@@ -1,0 +1,17 @@
+# storage/public/.htaccess — única subpasta de storage/ servida ao navegador
+# (imagens e PDFs gerados). Nunca executa PHP.
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Allow from all
+</IfModule>
+<FilesMatch "\.(php|phtml|phar)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</FilesMatch>
+Options -Indexes

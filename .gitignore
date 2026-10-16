@@ -6,9 +6,11 @@
 # Arquivos gerados (imagens, PDFs, logs, cache)
 storage/*
 !storage/.gitkeep
+!storage/.htaccess
 !storage/public/
 storage/public/*
 !storage/public/.gitkeep
+!storage/public/.htaccess
 !storage/logs/
 storage/logs/*
 !storage/logs/.gitkeep

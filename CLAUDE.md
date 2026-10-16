@@ -43,7 +43,10 @@ não deve ser misturada aqui.
 - IA de imagem (Gemini/OpenAI) e de texto configuráveis por `.env`;
   `AI_MOCK=1` devolve exemplos sem gastar créditos. Testes sempre em mock.
 - PDF: modo imagem com `pdf-lib` no navegador; modo editável com mPDF.
-- Servidor: Ubuntu 24.04, HestiaCP, nginx (somente 443), MySQL 8, PHP 8.2.
+- Servidor definitivo: Ubuntu 24.04, HestiaCP, nginx (somente 443), MySQL 8,
+  PHP 8.2. Hospedagem temporária: HostGator (cPanel/Apache) em subpasta,
+  `https://cecapescs.com.br/materiais` — por isso existem `.htaccess` e a
+  constante `BASE_PATH`; toda URL gerada no PHP passa por `url()`.
 
 ## Convenções
 

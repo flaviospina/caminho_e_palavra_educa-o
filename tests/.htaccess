@@ -1,0 +1,8 @@
+# tests/.htaccess
+# Pasta privada: nunca servida pelo Apache (o nginx já não a publica).
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>
