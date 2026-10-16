@@ -182,6 +182,25 @@ HostGator ele é executado por **Cron Job** a cada minuto:
 6. Acompanhamento: `storage/logs/worker.log` (lotes) e `storage/logs/app.log`
    (erros detalhados). Custos em `usage_log` (tela PoC mostra os últimos).
 
+### A6g. Fase 5 — identidade visual, cartazes e PDF
+
+1. Após o Update from Remote: phpMyAdmin → Importar `sql/schema.sql` (sem
+   erro; só cria o que falta) e, no sistema, **Admin → Identidade → Aplicar
+   atualizações pendentes** (acrescenta as colunas novas; necessário porque o
+   MySQL 5.7 não tem "adicionar coluna se não existir").
+2. `.env`: opcionalmente `NETWORK_NAME="Secretaria de Educação · São Caetano do Sul"`.
+3. **Admin → Identidade**: logotipo da rede. **Escolas → editar**: logotipo,
+   cor principal e frase da escola. Capas e cartazes recebem a faixa inferior
+   com essas identidades (composta no servidor).
+4. **Criar cartaz**: tipo de evento, textos, formatos (Story, Feed, A4) e
+   estilo; a arte vai pela mesma fila; "baixar PNG" em cada formato.
+5. Projeto com páginas prontas: **Montar o PDF da apostila** (ordem por
+   arrastar ou setas; capa fixa) → "Baixar PDF" monta no navegador; se o CDN
+   da biblioteca não carregar, o servidor monta automaticamente.
+6. **Duplicar este projeto** cria uma cópia como rascunho; **Estilos** mostra
+   a biblioteca por faixa etária com a referência e a última página real.
+7. Roteiro completo de teste: `docs/ROTEIRO-TESTE-MANUAL.md`.
+
 ### A7. Limitações no HostGator
 
 - Não há `systemd`: o worker de geração (Fase 4) rodará por **Cron Job** do

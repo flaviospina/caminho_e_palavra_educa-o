@@ -5,8 +5,8 @@
 
 ## Fase atual
 
-**FASE 4 — Fila, geração de imagem e conferência automática: concluída,
-aguardando `APROVADO FASE 4`.**
+**FASE 5 — Interface completa, capas, cartazes e PDF: concluída, aguardando
+`APROVADO FASE 5`.**
 
 | Fase | Situação |
 |---|---|
@@ -14,8 +14,8 @@ aguardando `APROVADO FASE 4`.**
 | 1 — Prova de conceito dos motores de IA | ✅ aprovada (16/10/2026) |
 | 2 — Banco, BNCC e autenticação | ✅ aprovada (16/10/2026) |
 | 3 — Assistente de conteúdo e revisão | ✅ aprovada (16/10/2026) |
-| 4 — Fila, geração de imagem e conferência | ✅ concluída (aguardando aprovação) |
-| 5 — Interface completa, capas, cartazes e PDF | ⏳ |
+| 4 — Fila, geração de imagem e conferência | ✅ aprovada (16/10/2026) |
+| 5 — Interface completa, capas, cartazes e PDF | ✅ concluída (aguardando aprovação) |
 | 6 — Modo editável | ⏳ |
 | 7 — Diferenciais pedagógicos | ⏳ |
 | 8 — Gestão, cotas e LGPD | ⏳ |
@@ -71,6 +71,20 @@ aguardando `APROVADO FASE 4`.**
 | Conferência simulada com erro dispara regeneração e para após 2 tentativas, marcando revisão manual | ✅ | Teste "conferência": 1 geração + 2 regenerações, página `revisar`, `check_result` com os problemas |
 | Nenhuma requisição web espera a IA de imagem | ✅ | `POST /projetos/{id}/gerar` só cria jobs (responde em < 2 s, nenhum motor chamado); geração só no worker |
 | `usage_log` registra cada chamada com custo estimado | ✅ | Uma linha por geração (`context=apostila`) e por conferência (`context=conferencia`), com usuário, escola, projeto/página, tokens e `cost_usd` |
+
+## Fase 5 — critérios de aceite
+
+| Critério | Status | Evidência |
+|---|---|---|
+| PDF baixado abre corretamente com páginas A4 na ordem definida | ✅ | Montagem no servidor (mPDF): `pdfinfo` → 4 páginas, 595,28 × 841,89 pt (A4); rodapé de cada página confirma a ordem capa, 1, 3, 2 (`pdftotext`). Montagem no navegador (pdf-lib 1.17.1 via CDN) com a mesma ordem e alternativa automática pelo servidor se o CDN falhar |
+| Cartaz gerado nos três formatos com as proporções corretas | ✅ | Teste "cartaz: gerado nos três formatos": STORY 1080×1920, FEED 1080×1080, A4 1024×1536; Gemini 9:16 / 1:1 / 2:3 e OpenAI 1024×1792 / 1024×1024 / 1024×1536 |
+| Busca retorna projetos pelo código BNCC | ✅ | `/projetos?habilidade=ef04ci01` (teste "busca") |
+| Teste manual guiado | ✅ | Roteiro em `docs/ROTEIRO-TESTE-MANUAL.md` (18 passos) |
+| Entregas sem critério formal: capas com identidade, duplicar, biblioteca de estilos | ✅ | Testes "identidade" (faixa com logotipo da escola, cor e nome da rede; `docs/capturas/fase5-faixa-identidade.png`), "duplicar" (apostila vira rascunho "Cópia de…"; cartaz nasce revisado) e "estilos" (biblioteca por faixa etária com amostra e prévia real). Telas em 360 px sem rolagem horizontal: `docs/capturas/fase5-*.png` |
+
+Suíte completa ao fim da fase: `php tests/run.php` → **101 testes, 0 falhas**
+(as funções de apoio compartilhadas foram movidas para `tests/helpers.php`,
+então `php tests/run.php fase5` roda isolado).
 
 ## Modelos e preços (consultados em 16/10/2026)
 
@@ -180,7 +194,23 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
     (`templates/styles/_capa.txt`); a identidade visual da escola entra na
     Fase 5. Imagens em `storage/projects/<id>/` (privadas), servidas por
     `/projetos/{id}/pagina/{n}.png` com verificação de acesso.
-21. **Imagens de referência** do coordenador salvas em
+21. **Fase 5 — identidade visual composta no servidor.** A IA recebe o nome da
+    escola/rede no prompt e deixa a faixa inferior livre; o `CoverBranding`
+    (GD) desenha logotipo e nome da escola à esquerda, cor principal como
+    filete e logotipo/nome da rede (`NETWORK_NAME`) à direita, em capas e
+    cartazes. Logos via upload validado por MIME real (`App\Upload`), gravados
+    em `storage/schools/` e `storage/branding/`.
+22. **Estrutura do banco em fases** (`SchemaUpdater`): novas colunas aplicadas
+    por verificação em `information_schema`, porque o MySQL 5.7 não aceita
+    `ADD COLUMN IF NOT EXISTS`. Botão em Admin → Identidade e
+    `tools/migrate.php`.
+23. **Cartazes** são projetos `type=cartaz` com uma página por formato
+    (`pages.format`), status `revisado` na criação (o professor escreve os
+    textos; não há IA de texto) e geração pela mesma fila e conferência.
+24. **PDF da apostila**: primeiro no navegador (pdf-lib, carregado sob demanda
+    do CDN), com alternativa no servidor (`BookPdfService`, mPDF) usada
+    automaticamente se a biblioteca não carregar; capa sempre primeiro.
+25. **Imagens de referência** do coordenador salvas em
    `templates/styles/referencias/` e descritas em `templates/styles/REFERENCIAS.md`,
    com um mapa inicial de 6 estilos a confirmar na Fase 1.
 
@@ -197,14 +227,14 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
   funções de janela, chaves únicas/índices em VARCHAR com no máximo 191
   caracteres, `JSON` apenas como armazenamento (sem depender de índices JSON).
 
-## Pendências para a Fase 5
+## Pendências para a Fase 6
 
-- Coordenador: criar o Cron Job no cPanel (ver LEIA-ME A6f) e, com o
-  faturamento do Google ativo, gerar as páginas de um projeto real.
-- Fase 5: capas com identidade visual da escola/Secretaria, cartazes de
-  eventos (Story 9:16, Feed 1:1, A4), montagem do PDF no navegador com
-  `pdf-lib`, busca e duplicação em Meus projetos, biblioteca de estilos com
-  prévia.
+- Coordenador: após o Update from Remote, importar `schema.sql` e clicar em
+  Admin → Identidade → "Aplicar atualizações pendentes"; enviar os logotipos;
+  executar o roteiro `docs/ROTEIRO-TESTE-MANUAL.md`.
+- Fase 6: modo editável (templates HTML/CSS por estilo, ilustração focal com
+  cache, edição de texto na página, PDF com mPDF e texto selecionável, escolha
+  do modo no passo Gerar).
 
 ## Ambiente de desenvolvimento (contêiner do Claude Code)
 

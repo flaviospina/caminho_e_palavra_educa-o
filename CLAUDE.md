@@ -108,3 +108,11 @@ página, capa = número 0) → `GenerationWorker` (`workers/generation_worker.ph
 (`GeminiVerifier`/`MockVerifier`), regenera até 2×, grava `usage_log`,
 atualiza `pages` e `projects`. Jobs órfãos voltam pela `recoverStale()`.
 Nenhuma requisição web chama motor de imagem.
+Fase 5: `App\Upload` (MIME real, nome aleatório, `storage/`), `CoverBranding`
+(faixa de identidade em capas/cartazes), `PosterService` (cartazes
+`type=cartaz`, uma página por formato em `pages.format`), `BookPdfService`
+(PDF no servidor) + componente `montagemPdf` (pdf-lib no navegador),
+`StylesController` (biblioteca), `SchemaUpdater` (colunas novas sem
+`IF NOT EXISTS`; registre toda coluna nova em `SchemaUpdater::COLUMNS` e no
+`schema.sql`). Funções de apoio compartilhadas entre arquivos de teste ficam
+em `tests/helpers.php` (carregado pelo bootstrap), nunca em um `fase*.php`.
