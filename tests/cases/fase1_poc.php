@@ -13,16 +13,8 @@ function poc_teste(): PocService
     return new PocService(new EngineFactory(['AI_MOCK' => '1', 'IMAGE_ENGINES' => 'gemini,openai']), $dir);
 }
 
-Teste::caso('schema: sql/schema.sql roda duas vezes sem erro e cria usage_log', function () {
+Teste::caso('schema: usage_log existe com utf8mb4_unicode_ci (schema aplicado pelo bootstrap)', function () {
     $pdo = Database::get();
-    $sql = (string) file_get_contents(ROOT_PATH . '/sql/schema.sql');
-    foreach ([1, 2] as $vez) {
-        foreach (array_filter(array_map('trim', explode(';', $sql))) as $stmt) {
-            if (!str_starts_with($stmt, '--') && $stmt !== '') {
-                $pdo->exec($stmt);
-            }
-        }
-    }
     Teste::verdadeiro(UsageLog::tableExists($pdo));
     $charset = $pdo->query("SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'usage_log'")->fetchColumn();
     Teste::igual('utf8mb4_unicode_ci', $charset);
@@ -105,18 +97,26 @@ Teste::caso('cli: tools/poc_generate.php gera PNG em modo simulado e sai com có
     }
 });
 
-Teste::caso('/poc: sem chave configurada é 404; com chave pede login; POST sem CSRF não gera', function () {
-    $_ENV['POC_ACCESS_KEY'] = '';
+Teste::caso('/poc: anônimo é redirecionado ao login; professor recebe 403; admin acessa', function () {
+    teste_logar(null);
     $r = app_router()->dispatch('GET', '/poc');
-    Teste::igual(404, $r->status);
-    $_ENV['POC_ACCESS_KEY'] = 'segredo';
+    Teste::igual(302, $r->status);
+    Teste::contem('/entrar', $r->headers['Location'] ?? '');
+    $r = app_router()->dispatch('GET', '/poc/imagem/abc123/x.png');
+    Teste::igual(302, $r->status, 'Imagem sem sessão redireciona');
+
+    $prof = teste_criar_usuario('professor');
+    teste_logar($prof);
+    $r = app_router()->dispatch('GET', '/poc');
+    Teste::igual(403, $r->status, 'Professor não acessa a PoC');
+
+    teste_preparar_admin();
+    teste_logar(1);   // admin inicial (seeds)
+    teste_aceitar_termo(1);
     $r = app_router()->dispatch('GET', '/poc');
     Teste::igual(200, $r->status);
-    Teste::contem('Chave de acesso', $r->body);
-    Teste::naoContem('Gerar nesta página', $r->body);
+    Teste::contem('Gerar nesta página', $r->body);
     $r = app_router()->dispatch('POST', '/poc/gerar');
-    Teste::igual(302, $r->status, 'Sem autorização redireciona');
-    $r = app_router()->dispatch('GET', '/poc/imagem/abc123/x.png');
-    Teste::igual(403, $r->status);
-    unset($_ENV['POC_ACCESS_KEY']);
+    Teste::igual(302, $r->status, 'POST sem CSRF redireciona sem gerar');
+    teste_logar(null);
 });

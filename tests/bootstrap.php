@@ -9,6 +9,32 @@ define('ENV_FILE', is_file($envTest) ? $envTest : dirname(__DIR__) . '/.env');
 
 require dirname(__DIR__) . '/app/bootstrap.php';
 
+/** Executa um arquivo .sql (vários comandos) no banco de teste. */
+function teste_aplicar_sql(string $file): void
+{
+    App\Database::applySqlFile($file);
+}
+
+// Banco de teste sempre com o esquema e os dados iniciais mais recentes.
+try {
+    teste_aplicar_sql(dirname(__DIR__) . '/sql/schema.sql');
+    teste_aplicar_sql(dirname(__DIR__) . '/sql/seeds.sql');
+} catch (Throwable $e) {
+    fwrite(STDERR, "Não foi possível preparar o banco de teste: " . $e->getMessage() . "\nConfira .env.test (DB_*).\n");
+    exit(1);
+}
+
+/** Simula o login de um usuário nos testes (sessão em array). */
+function teste_logar(?int $userId): void
+{
+    App\Session::start();
+    $_SESSION = [];
+    App\Auth::refresh();
+    if ($userId !== null) {
+        $_SESSION[App\Auth::SESSION_KEY] = $userId;
+    }
+}
+
 final class FalhaDeTeste extends \RuntimeException
 {
 }
@@ -86,4 +112,34 @@ final class Teste
         }
         throw new FalhaDeTeste($msg . ' — nenhuma exceção lançada');
     }
+}
+
+/** Cria (ou reaproveita) um usuário de teste com o perfil indicado; devolve o id. */
+function teste_criar_usuario(string $role = 'professor', string $email = '', string $senha = 'Senha123', bool $mustChange = false): int
+{
+    $email = $email !== '' ? $email : "teste.{$role}@exemplo.com";
+    $existente = App\Models\User::findByEmail($email);
+    if ($existente !== null) {
+        App\Models\User::updatePassword((int) $existente['id'], $senha, $mustChange);
+        App\Database::get()->prepare('UPDATE users SET active = 1, anonymized_at = NULL WHERE id = :id')->execute(['id' => $existente['id']]);
+        return (int) $existente['id'];
+    }
+    $roleId = App\Models\Role::idBySlug($role);
+    return App\Models\User::create([
+        'name' => 'Teste ' . ucfirst($role), 'email' => $email, 'role_id' => $roleId,
+        'school_id' => $role === 'admin' ? null : 1, 'active' => 1,
+    ], $senha, $mustChange);
+}
+
+/** Registra o aceite do termo vigente para o usuário (sem passar pelo formulário). */
+function teste_aceitar_termo(int $userId): void
+{
+    App\Models\Consent::record($userId, '127.0.0.1', 'teste');
+}
+
+/** Garante a senha provisória do admin inicial (id 1) como no seeds.sql, sem obrigar troca. */
+function teste_preparar_admin(): void
+{
+    App\Models\User::updatePassword(1, 'Mudar@2026', false);
+    App\Database::get()->exec('UPDATE users SET active = 1, failed_attempts = 0, locked_until = NULL WHERE id = 1');
 }
