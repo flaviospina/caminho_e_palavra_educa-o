@@ -1,5 +1,12 @@
 // public/assets/js/app.js — componentes Alpine.js da aplicação
-document.addEventListener('alpine:init', () => {
+// Este arquivo é carregado ANTES do Alpine (ordem dos <script defer> no layout):
+// os componentes são registrados no evento alpine:init. Se por algum motivo o
+// Alpine já estiver presente, registra na hora.
+function registrarAlpine(fn) {
+  if (window.Alpine) { fn(); } else { document.addEventListener('alpine:init', fn); }
+}
+
+registrarAlpine(() => {
   // Painel "Estado do sistema" da página inicial: consulta GET /health.
   Alpine.data('estadoSistema', () => ({
     carregando: true,
@@ -30,7 +37,7 @@ document.addEventListener('alpine:init', () => {
 });
 
 // Assistente de criação (passos 1–3): anos por etapa, componentes e habilidades via API.
-document.addEventListener('alpine:init', () => {
+registrarAlpine(() => {
   Alpine.data('assistente', (cfg) => ({
     passo: 1, enviando: false, erroPasso: '',
     etapa: cfg.valores.etapa || '', ano: cfg.valores.ano || '', componente: cfg.valores.componente || '',

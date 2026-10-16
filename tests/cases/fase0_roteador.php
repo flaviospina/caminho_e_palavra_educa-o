@@ -81,6 +81,18 @@ Teste::caso('roteador: asset() acrescenta a versão (data do arquivo) à URL do 
     Teste::contem('/assets/css/app.css?v=', $html);
 });
 
+Teste::caso('layout: app.js é carregado antes do Alpine (os componentes são registrados no alpine:init)', function () {
+    $html = app_router()->dispatch('GET', '/')->body;
+    $posApp = strpos($html, '/assets/js/app.js');
+    $posAlpine = strpos($html, 'alpinejs@');
+    Teste::verdadeiro($posApp !== false && $posAlpine !== false && $posApp < $posAlpine, 'app.js deve vir antes do script do Alpine');
+    $js = (string) file_get_contents(ROOT_PATH . '/public/assets/js/app.js');
+    Teste::contem("Alpine.data('assistente'", $js);
+    Teste::contem("Alpine.data('estadoSistema'", $js);
+    Teste::contem('registrarAlpine(', $js);
+    Teste::naoContem("document.addEventListener('alpine:init', () =>", $js);
+});
+
 Teste::caso('roteador: url() monta endereços com BASE_URL', function () {
     $base = BASE_URL !== '' ? BASE_URL : BASE_PATH;
     Teste::igual($base . '/health', url('/health'));
