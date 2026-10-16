@@ -93,6 +93,7 @@ define('LOG_PATH', STORAGE_PATH . '/logs');
 unset($storagePath);
 
 define('AI_MOCK', env_bool('AI_MOCK', true));
+define('TERM_VERSION', env('TERM_VERSION', '2026-10') ?: '2026-10');
 
 date_default_timezone_set(env('APP_TIMEZONE', 'America/Sao_Paulo') ?: 'America/Sao_Paulo');
 mb_internal_encoding('UTF-8');

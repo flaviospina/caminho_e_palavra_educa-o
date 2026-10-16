@@ -14,7 +14,38 @@
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; font-family: var(--fonte); color: var(--texto); background: #fff; line-height: 1.5; }
 a { color: var(--azul); }
-.topo { background: var(--azul-escuro); color: #fff; padding: 0.75rem 1rem; }
+.topo { background: var(--azul-escuro); color: #fff; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+.menu-botao { background: transparent; border: 1px solid #fff; color: #fff; font-size: 1.2rem; border-radius: 6px; padding: 0.2rem 0.6rem; cursor: pointer; }
+.menu { display: none; width: 100%; flex-direction: column; gap: 0.5rem; padding-top: 0.5rem; }
+.menu.menu-aberto { display: flex; }
+.menu a { color: #fff; text-decoration: none; padding: 0.25rem 0; }
+.menu-usuario { color: #bfdbfe; font-size: 0.9rem; }
+.menu-form { margin: 0; }
+.botao-claro { background: #fff; color: var(--azul-escuro); }
+.flash { padding: 0.75rem 1rem; border-radius: 8px; margin: 0 0 1rem; }
+.flash-ok { background: #dcfce7; color: #166534; }
+.flash-erro { background: #fee2e2; color: #991b1b; }
+.flash-aviso { background: #fef3c7; color: #92400e; }
+.caixa-form { max-width: 32rem; margin: 0 auto; }
+.form { display: grid; gap: 0.9rem; background: var(--cinza-100); padding: 1rem; border-radius: 12px; }
+.form label { display: grid; gap: 0.3rem; font-weight: 600; }
+.form input[type=text], .form input[type=email], .form input[type=password], .form input[type=search], .form select { font: inherit; padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 8px; width: 100%; }
+.form .check, .check { display: flex; gap: 0.5rem; align-items: center; font-weight: 500; }
+.form-filtros { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
+.form-filtros input, .form-filtros select { font: inherit; padding: 0.45rem; border: 1px solid #cbd5e1; border-radius: 8px; flex: 1 1 10rem; }
+.cabecalho-pagina { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.cabecalho-pagina h1, .painel h1 { font-size: 1.5rem; margin: 0.5rem 0; color: var(--azul-escuro); }
+.acoes { display: flex; gap: 0.6rem; align-items: center; }
+.acoes form { margin: 0; }
+button.link { background: none; border: 0; color: var(--azul); cursor: pointer; font: inherit; padding: 0; text-decoration: underline; }
+.paginacao a { display: inline-block; padding: 0.2rem 0.6rem; border: 1px solid #cbd5e1; border-radius: 6px; margin-right: 0.3rem; text-decoration: none; }
+.paginacao a.atual { background: var(--azul); color: #fff; }
+.lista-compacta { padding-left: 1.2rem; margin: 0.3rem 0 0.8rem; }
+.habilidade { background: var(--cinza-100); border-left: 6px solid var(--azul); padding: 0.75rem; border-radius: 8px; margin: 0.5rem 0; }
+.tabela td.quebra { white-space: normal; min-width: 18rem; }
+.termo-texto { background: var(--cinza-100); padding: 1rem 1.25rem; border-radius: 12px; max-height: 60vh; overflow: auto; margin-bottom: 1rem; }
+.termo-texto h1 { font-size: 1.3rem; }
+.termo-texto h2 { font-size: 1.05rem; margin: 1rem 0 0.25rem; }
 .marca { color: #fff; text-decoration: none; font-weight: 700; display: inline-flex; gap: 0.5rem; align-items: center; }
 .conteudo { padding: 1rem; max-width: 64rem; margin: 0 auto; }
 .rodape { color: var(--cinza-600); font-size: 0.85rem; text-align: center; padding: 1.5rem 1rem; }
@@ -37,6 +68,8 @@ a { color: var(--azul); }
 @media (min-width: 640px) {
   .hero h1 { font-size: 2.2rem; }
   .cartoes { grid-template-columns: repeat(3, 1fr); }
+  .menu-botao { display: none; }
+  .menu { display: flex; width: auto; flex-direction: row; align-items: center; gap: 1rem; padding-top: 0; }
 }
 
 /* ── Prova de conceito (/poc) ── */

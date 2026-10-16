@@ -1,12 +1,9 @@
 <?php
 // app/views/poc.php — comparação lado a lado das imagens geradas por cada motor.
-/** @var string[] $exemplos @var string[] $motores @var bool $simulado @var array $modelos @var array $execucoes @var bool $tabela_ok @var array $usos @var ?string $resultado @var ?string $mensagem */
+/** @var string[] $exemplos @var string[] $motores @var bool $simulado @var array $modelos @var array $execucoes @var bool $tabela_ok @var array $usos @var ?string $resultado */
 ?>
 <section class="poc">
-  <div class="poc-cabecalho">
-    <h1>Prova de conceito dos motores</h1>
-    <form method="post" action="<?= e(url('/poc/sair')) ?>"><?= \App\Csrf::field() ?><button class="botao botao-leve" type="submit">Sair</button></form>
-  </div>
+  <h1>Prova de conceito dos motores</h1>
 
   <?php if ($simulado): ?>
     <p class="aviso">Modo simulado (<code>AI_MOCK=1</code>): as imagens são desenhadas pelo próprio sistema, sem gastar créditos. Para testar os motores reais, coloque as chaves no <code>.env</code> e <code>AI_MOCK=0</code>.</p>
@@ -16,7 +13,6 @@
   <?php if (!$tabela_ok): ?>
     <p class="erro">A tabela <code>usage_log</code> não existe. Importe <code>sql/schema.sql</code> no phpMyAdmin para registrar o custo de cada geração.</p>
   <?php endif; ?>
-  <?php if (!empty($mensagem)): ?><p class="ok"><?= e($mensagem) ?></p><?php endif; ?>
 
   <form method="post" action="<?= e(url('/poc/gerar')) ?>" class="poc-form" x-data="{ enviando: false }" @submit="enviando = true">
     <?= \App\Csrf::field() ?>

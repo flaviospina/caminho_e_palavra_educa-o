@@ -4,6 +4,7 @@
 <section class="hero">
   <h1>Materiais visuais com IA para a sala de aula</h1>
   <p>Apostilas A4, cartazes de eventos e planos de aula alinhados à BNCC, criados pelos professores da rede municipal de São Caetano do Sul.</p>
+  <p><a class="botao" href="<?= e(url(\App\Auth::check() ? '/painel' : '/entrar')) ?>"><?= \App\Auth::check() ? 'Ir para o painel' : 'Entrar' ?></a></p>
 </section>
 
 <section class="cartoes">

@@ -11,9 +11,6 @@ final class Csrf
 
     public static function token(): string
     {
-        if (PHP_SAPI === 'cli') {
-            return 'cli';
-        }
         Session::start();
         $token = Session::get('csrf_token');
         if (!is_string($token) || $token === '') {
@@ -32,9 +29,6 @@ final class Csrf
     /** Confere o token enviado (POST) com o da sessão. */
     public static function check(?string $sent): bool
     {
-        if (PHP_SAPI === 'cli') {
-            return true;
-        }
         Session::start();
         $token = Session::get('csrf_token');
         return is_string($token) && is_string($sent) && $sent !== '' && hash_equals($token, $sent);
