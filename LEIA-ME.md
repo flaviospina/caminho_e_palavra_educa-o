@@ -93,6 +93,28 @@ escrita", no Gerenciador de Arquivos clique com o botão direito em `storage`
 → *Change Permissions* → `755` (marque "aplicar às subpastas"). As pastas
 privadas respondem 403 ou 404; ambos significam "bloqueado".
 
+### A6b. Banco: importar o `sql/schema.sql`
+
+phpMyAdmin → selecione o banco → aba **Importar** → escolha `sql/schema.sql`
+→ Executar. O arquivo pode ser importado de novo a cada fase sem apagar nada.
+
+### A6c. Prova de conceito dos motores de IA (`/poc`)
+
+1. No `.env`, defina `POC_ACCESS_KEY=<uma senha sua>` (vazio desliga a página).
+2. Para testar sem gastar créditos, mantenha `AI_MOCK=1`.
+3. Para testar os motores reais: `AI_MOCK=0`, `GEMINI_API_KEY=...`,
+   `OPENAI_API_KEY=...`, e confira `GEMINI_IMAGE_MODEL`, `OPENAI_IMAGE_MODEL`,
+   `IMAGE_QUALITY`. Cada geração consome créditos.
+4. Abra `https://cecapescs.com.br/materiais/poc`, entre com a chave, escolha um
+   exemplo, a página e os motores, e clique em **Gerar**. A geração pode levar
+   alguns minutos; as imagens ficam em `storage/poc/<execução>/` e cada
+   chamada é registrada em `usage_log` (tabela ao final da página).
+
+Se o servidor interromper a geração por tempo (erro 504 ou página em branco),
+reduza para um motor por vez; o limite de execução do PHP no HostGator pode ser
+menor que o tempo de geração. A geração definitiva (Fase 4) roda em fila, fora
+da requisição web.
+
 ### A7. Limitações no HostGator
 
 - Não há `systemd`: o worker de geração (Fase 4) rodará por **Cron Job** do
@@ -198,6 +220,12 @@ servidos como estáticos). Nada em `storage/` executa PHP. Os arquivos
    falta (banco, pasta `storage` ou extensão PHP).
 3. Abra `https://<domínio>/.env` e `https://<domínio>/app/config.php` — ambos
    devem dar **404**.
+
+### B8b. Prova de conceito dos motores (`/poc`) e `schema.sql`
+
+Igual à Parte A (A6b e A6c): importe `sql/schema.sql` no phpMyAdmin do
+HestiaCP e defina `POC_ACCESS_KEY` no `.env`. Pelo terminal web também é
+possível rodar `php tools/poc_generate.php data/exemplos/<arquivo>.json --pagina=1`.
 
 ### B9. Rodar os testes no servidor (opcional, recomendado)
 

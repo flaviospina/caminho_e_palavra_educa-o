@@ -81,3 +81,10 @@ separado. Ao final de cada fase o resultado precisa ser `0 falhas`.
 
 Ver seção 4 do `docs/PROMPT-MESTRE.md`. Entrada única: `public/index.php` →
 `app/bootstrap.php` → `app/routes.php` → controladores em `app/controllers/`.
+IA em `app/ai/` (interfaces `ImageEngine`/`TextEngine`, adaptadores
+`GeminiImage`/`OpenAIImage`, `MockEngine`, `PromptBuilder`, `Styles`,
+`Pricing`, `EngineFactory`). Estilos em `templates/styles/` (`estilos.json` +
+um prompt-modelo `.txt` por estilo). Exemplos em `data/exemplos/`. Ao criar
+uma classe nova, rode `composer dump-autoload --optimize` e versione `vendor/`.
+Modelos de IA e preços confirmados: ver "Modelos e preços" em `PROGRESSO.md`
+(os IDs `-preview` do Gemini citados no prompt-mestre foram desligados).
