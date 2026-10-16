@@ -95,3 +95,9 @@ modelos em `app/models/`. Base BNCC: `data/bncc/` (dataset bncc-dados, CC BY
 `BnccSkill::validateFor()` é a validação oficial de código/etapa/ano/componente.
 Testes: `tests/bootstrap.php` aplica `schema.sql` + `seeds.sql` no banco de
 teste e oferece `teste_logar()`, `teste_criar_usuario()`, `teste_aceitar_termo()`.
+Conteúdo (Fase 3): `ContentPromptBuilder` → `TextEngine` (`GeminiText` ou
+`MockEngine`) → `ContentValidator` → `ContentService` (gera, corrige 1×, salva)
+→ `Project`/`Page`; revisão separa `content_json` (IA) de `reviewed_json`
+(professor). Plano de aula sem IA em `LessonPlanService`; PDF em `PdfService`
+(mPDF com fontes de `templates/fonts`; `vendor/mpdf/mpdf/ttfonts` não é
+versionado).

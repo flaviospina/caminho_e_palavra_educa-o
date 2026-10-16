@@ -5,15 +5,15 @@
 
 ## Fase atual
 
-**FASE 2 — Banco de dados, BNCC e autenticação: concluída, aguardando
-`APROVADO FASE 2`.**
+**FASE 3 — Assistente de conteúdo (texto) e revisão: concluída, aguardando
+`APROVADO FASE 3`.**
 
 | Fase | Situação |
 |---|---|
 | 0 — Fundação | ✅ aprovada (16/10/2026) |
 | 1 — Prova de conceito dos motores de IA | ✅ aprovada (16/10/2026) |
-| 2 — Banco, BNCC e autenticação | ✅ concluída (aguardando aprovação) |
-| 3 — Assistente de conteúdo e revisão | ⏳ |
+| 2 — Banco, BNCC e autenticação | ✅ aprovada (16/10/2026) |
+| 3 — Assistente de conteúdo e revisão | ✅ concluída (aguardando aprovação) |
 | 4 — Fila, geração de imagem e conferência | ⏳ |
 | 5 — Interface completa, capas, cartazes e PDF | ⏳ |
 | 6 — Modo editável | ⏳ |
@@ -52,6 +52,16 @@
 | Professor não acessa telas de admin | ✅ | teste "permissão": 403 em `/admin/*` para professor e coordenador; 302 para anônimo; 200 para admin |
 | Aceite do termo registrado com data, hora e IP | ✅ | tabela `consents` (`accepted_at`, `ip`, `user_agent`, versão); teste "termo" |
 
+## Fase 3 — critérios de aceite
+
+| Critério | Status | Evidência |
+|---|---|---|
+| JSON inválido ou com habilidade fora do recorte é rejeitado e o motivo aparece ao professor | ✅ | `ContentValidator` (estrutura, limites por estilo, `BnccSkill::validateFor`); testes `fase3_conteudo.php`; na tela o motivo vai no flash ou na lista de erros da revisão |
+| Professor edita qualquer bloco e salva; histórico guarda a versão gerada e a revisada | ✅ | `projects.content_json` (gerada) e `reviewed_json` (revisada) + `reviewed_at`; "Voltar à versão gerada"; teste "revisão" |
+| Plano de aula exportável em PDF de texto | ✅ | `LessonPlanService` + mPDF com DejaVu; `pdftotext` extrai "Plano de aula", "EF04CI01", "Avaliação"; teste "plano de aula" |
+| Testes: geração simulada, validação, edição, permissão (professor só os próprios; coordenador os da escola) | ✅ | `fase3_conteudo.php` e `fase3_projetos.php` |
+| Interface utilizável em celular (360 px) sem rolagem horizontal | ✅ | Chromium headless (Playwright) a 360 px: painel, Meus projetos, assistente (passo 1), revisão, projeto e plano de aula com `scrollWidth = 360`; contador de limite funcionando; capturas em `docs/capturas/`. Os passos 2 e 3 do assistente dependem do Alpine.js via CDN, bloqueado na rede deste ambiente; o envio do formulário foi verificado por POST direto |
+
 ## Modelos e preços (consultados em 16/10/2026)
 
 | Motor | ID no `.env` | Situação | Preço de referência por imagem (US$) |
@@ -61,6 +71,8 @@
 | Google Gemini | `gemini-3.1-flash-lite-image` | Nano Banana 2 Lite | 0,0336 (1K) — US$ 30 / 1 M tokens |
 | OpenAI | `gpt-image-2.5-flare` (padrão) | Lançado em 08/09/2026; variante rápida | Cobrança por token: US$ 30 / 1 M tokens de saída de imagem, 5 / 1 M texto de entrada. 1024×1536 ≈ 0,012 (low) · 0,048 (medium) · 0,187 (high) |
 | OpenAI | `gpt-image-2.5-sunburst` | Mesma data; variante de qualidade (mais lenta) | Mesma tabela de tokens do flare |
+
+| Google Gemini (texto) | `gemini-3.8-flash` (padrão) | A documentação oficial marca `gemini-3.7-flash` como descontinuado e redirecionado para `gemini-3.8-flash` (out/2026). Alternativas: `gemini-3.5-flash`, `gemini-3.1-pro` | Referência do 3.7 (introdutória até 31/12/2026): US$ 0,75 / 1 M tokens de entrada e 3,75 / 1 M de saída. Um conteúdo de 3 páginas ≈ 4 mil tokens ≈ US$ 0,01 |
 
 O custo gravado em `usage_log` é calculado pelos tokens devolvidos pela API
 (`usageMetadata` no Gemini, `usage` na OpenAI); a tabela por imagem é só
@@ -127,7 +139,21 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
 14. **E-mail** via `mail()` do PHP (HostGator/HestiaCP) com `MAIL_DRIVER=log`
     nos testes. Se o `mail()` do HostGator for bloqueado, trocar por SMTP é um
     ajuste só em `app/services/Mailer.php`.
-15. **Imagens de referência** do coordenador salvas em
+15. **Fase 3 — mPDF instalado via Composer** (`mpdf/mpdf` 8.3) para o PDF do
+    plano de aula e, na Fase 6, para o modo editável. Para manter o `vendor/`
+    versionado leve, ficam fora do git a pasta `ttfonts` do mPDF (88 MB) e os
+    testes das bibliotecas; o sistema usa só as fontes DejaVu de
+    `templates/fonts` (`PdfService`). Cache do mPDF em `storage/cache/mpdf`.
+16. **Plano de aula sem IA**: montado deterministicamente a partir do JSON
+    aprovado (identificação, habilidades com texto oficial, objetivos,
+    momentos por página com duração, avaliação). Zero custo e sempre coerente
+    com a apostila.
+17. **Geração com correção automática**: se o JSON da IA falhar na validação,
+    o sistema devolve os erros ao modelo uma vez; se continuar inválido, o
+    professor vê os motivos e nada é salvo. Com `AI_MOCK=1` o motor simulado
+    monta um conteúdo coerente com o pedido (etapa, ano, componente,
+    habilidades, tema, nº de páginas).
+18. **Imagens de referência** do coordenador salvas em
    `templates/styles/referencias/` e descritas em `templates/styles/REFERENCIAS.md`,
    com um mapa inicial de 6 estilos a confirmar na Fase 1.
 
@@ -144,15 +170,15 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
   funções de janela, chaves únicas/índices em VARCHAR com no máximo 191
   caracteres, `JSON` apenas como armazenamento (sem depender de índices JSON).
 
-## Pendências para a Fase 3
+## Pendências para a Fase 4
 
-- Coordenador: no servidor, importar `schema.sql` + `seeds.sql`, entrar como
-  admin, importar a BNCC pela tela e trocar o e-mail do admin inicial.
-- Coordenador: confirmar o teste dos motores reais pela `/poc` e os preços.
-- Fase 3: assistente de conteúdo (etapa → ano → componente → habilidade →
-  tema), adaptador real de texto (Gemini) com saída JSON, validador do esquema
-  usando `BnccSkill::validateFor()`, editor de revisão, plano de aula em PDF,
-  "Meus projetos" (tabelas `projects`/`pages` já existem).
+- Coordenador: testar o assistente com `AI_MOCK=0` e `GEMINI_API_KEY` (texto
+  real pelo `gemini-3.8-flash`) e conferir o preço do modelo na página oficial.
+- Coordenador: confirmar o teste dos motores de imagem pela `/poc`.
+- Fase 4: fila `generation_jobs`, worker CLI (no HostGator via Cron Job do
+  cPanel; no cecape-server via systemd), geração por página a partir de
+  `pages` + `PromptBuilder`, conferência automática, galeria e custo por
+  geração. O botão "Gerar imagens" entra na tela do projeto (passo 5).
 
 ## Ambiente de desenvolvimento (contêiner do Claude Code)
 

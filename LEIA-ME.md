@@ -134,6 +134,28 @@ reduza para um motor por vez; o limite de execução do PHP no HostGator pode se
 menor que o tempo de geração. A geração definitiva (Fase 4) roda em fila, fora
 da requisição web.
 
+### A6e. Criar um material (Fase 3)
+
+1. Painel → **Criar material**. Passo 1: etapa, ano, componente, até 3
+   habilidades BNCC (lista oficial filtrada pelo recorte) e tema. Passo 2:
+   finalidade e número de páginas. Passo 3: estilo visual.
+2. "Gerar conteúdo com a IA" chama o motor de texto (`TEXT_ENGINE=gemini`,
+   `GEMINI_TEXT_MODEL=gemini-3.8-flash`; com `AI_MOCK=1` o conteúdo é
+   simulado, sem custo). O JSON é validado (esquema, habilidades do recorte,
+   limites do estilo); se vier inválido, o sistema pede uma correção ao modelo
+   e, se ainda falhar, mostra os motivos.
+3. Passo 4: revise cada bloco. O contador mostra o limite de caracteres do
+   estilo; acima do limite o sistema não salva. A versão gerada fica guardada
+   e "Voltar à versão gerada" a restaura.
+4. Passo 5: resumo, **Plano de aula** (texto montado do mesmo conteúdo, sem
+   custo) e **PDF do plano** (texto selecionável). O projeto fica em
+   **Meus projetos** (professor vê os seus; coordenador, os da escola; admin,
+   todos), com busca por componente, ano e código BNCC.
+
+Novas linhas do `.env` (copie do `.env.example`): `TEXT_ENGINE`,
+`GEMINI_TEXT_MODEL`, `TEXT_TIMEOUT`. A pasta `storage/cache` precisa ser
+gravável (cache do gerador de PDF).
+
 ### A7. Limitações no HostGator
 
 - Não há `systemd`: o worker de geração (Fase 4) rodará por **Cron Job** do
