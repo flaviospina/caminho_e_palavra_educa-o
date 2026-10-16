@@ -12,8 +12,9 @@ $flashes = \App\Request::pullFlash();
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($titulo) ?> · <?= e(APP_NAME) ?></title>
 <link rel="stylesheet" href="<?= e(asset('/assets/css/app.css')) ?>">
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
+<?php // app.js precisa vir ANTES do Alpine: ele registra os componentes no evento alpine:init, disparado assim que o Alpine carrega. ?>
 <script defer src="<?= e(asset('/assets/js/app.js')) ?>"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
 </head>
 <body>
 <header class="topo" x-data="{ aberto: false }">
