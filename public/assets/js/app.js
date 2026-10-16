@@ -9,8 +9,8 @@ document.addEventListener('alpine:init', () => {
     banco: '',
     storage: '',
     async carregar() {
-      const base = document.querySelector('link[rel="stylesheet"][href$="/assets/css/app.css"]');
-      const baseUrl = base ? base.getAttribute('href').replace(/\/assets\/css\/app\.css$/, '') : '';
+      const base = document.querySelector('link[rel="stylesheet"][href*="/assets/css/app.css"]');
+      const baseUrl = base ? base.getAttribute('href').replace(/\/assets\/css\/app\.css(\?.*)?$/, '') : '';
       try {
         const resposta = await fetch(baseUrl + '/health', { headers: { Accept: 'application/json' } });
         const dados = await resposta.json();

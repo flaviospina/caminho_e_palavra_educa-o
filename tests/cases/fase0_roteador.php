@@ -72,6 +72,15 @@ Teste::caso('roteador: prefixo de subpasta (BASE_PATH) é removido do caminho', 
     Teste::igual(404, app_router()->dispatch('GET', '/materiais/nada', '/materiais')->status);
 });
 
+Teste::caso('roteador: asset() acrescenta a versão (data do arquivo) à URL do CSS/JS', function () {
+    $u = asset('/assets/js/app.js');
+    Teste::verdadeiro((bool) preg_match('#/assets/js/app\\.js\\?v=\\d{9,}$#', $u), $u);
+    Teste::contem('?v=', asset('/assets/css/app.css'));
+    $html = app_router()->dispatch('GET', '/')->body;
+    Teste::contem('/assets/js/app.js?v=', $html);
+    Teste::contem('/assets/css/app.css?v=', $html);
+});
+
 Teste::caso('roteador: url() monta endereços com BASE_URL', function () {
     $base = BASE_URL !== '' ? BASE_URL : BASE_PATH;
     Teste::igual($base . '/health', url('/health'));

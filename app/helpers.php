@@ -18,3 +18,15 @@ function url(string $path = ''): string
     $base = BASE_URL !== '' ? BASE_URL : BASE_PATH;
     return $base . '/' . ltrim($path, '/');
 }
+
+/**
+ * URL de um arquivo estático de public/ com a data de modificação como versão,
+ * para o navegador baixar a versão nova a cada atualização (sem cache antigo).
+ * asset('/assets/js/app.js') → …/assets/js/app.js?v=1760630000
+ */
+function asset(string $path): string
+{
+    $file = ROOT_PATH . '/public/' . ltrim($path, '/');
+    $v = is_file($file) ? (string) filemtime($file) : APP_VERSION;
+    return url($path) . '?v=' . $v;
+}

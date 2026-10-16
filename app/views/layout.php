@@ -11,9 +11,9 @@ $flashes = \App\Request::pullFlash();
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($titulo) ?> · <?= e(APP_NAME) ?></title>
-<link rel="stylesheet" href="<?= e(url('/assets/css/app.css')) ?>">
+<link rel="stylesheet" href="<?= e(asset('/assets/css/app.css')) ?>">
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
-<script defer src="<?= e(url('/assets/js/app.js')) ?>"></script>
+<script defer src="<?= e(asset('/assets/js/app.js')) ?>"></script>
 </head>
 <body>
 <header class="topo" x-data="{ aberto: false }">
