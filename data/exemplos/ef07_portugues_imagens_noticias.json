@@ -1,0 +1,157 @@
+{
+  "tipo": "apostila",
+  "etapa": "EF_ANOS_FINAIS",
+  "ano": "7",
+  "componente": "Língua Portuguesa",
+  "habilidades": [
+    {
+      "codigo": "EF67LP08",
+      "resumo": "Identificar os efeitos de sentido das escolhas de imagens em notícias, reportagens, memes e anúncios."
+    }
+  ],
+  "tema": "Imagens que contam notícias",
+  "finalidade": "introducao",
+  "estilo": "jovem_cinematografico",
+  "capa": {
+    "texto_superior": "Língua Portuguesa · 7º ano",
+    "titulo": "Imagens que contam notícias",
+    "subtitulo": "O que a foto diz que o texto não disse",
+    "frase_inferior": "Olhar crítico para o que vemos."
+  },
+  "paginas": [
+    {
+      "numero": 1,
+      "tipo": "abertura",
+      "titulo": "Imagens que contam notícias",
+      "subtitulo": "Ler além das palavras",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Objetivo",
+          "texto": "Perceber como fotos, ângulos e cores mudam o sentido de uma notícia."
+        },
+        {
+          "n": "02",
+          "titulo": "O que você vai aprender",
+          "itens": [
+            "Imagem como parte da notícia",
+            "Ângulo, foco e enquadramento",
+            "Cores e legendas",
+            "Memes e anúncios"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Habilidades BNCC",
+          "itens": [
+            "EF67LP08 – Efeitos de sentido das imagens em notícias e anúncios"
+          ]
+        },
+        {
+          "n": "04",
+          "titulo": "Por que é importante",
+          "itens": [
+            "Reconhecer manipulação",
+            "Consumir informação com crítica",
+            "Produzir conteúdo responsável"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Como vamos estudar",
+          "itens": [
+            "Análise de exemplos",
+            "Comparação de fotos",
+            "Produção de legenda"
+          ]
+        },
+        {
+          "n": "06",
+          "titulo": "Nas próximas páginas",
+          "itens": [
+            "Página 2 – A linguagem da imagem",
+            "Página 3 – Análise guiada"
+          ]
+        }
+      ],
+      "rodape": "Toda imagem é uma escolha."
+    },
+    {
+      "numero": 2,
+      "tipo": "explicacao",
+      "titulo": "A linguagem da imagem",
+      "subtitulo": "Elementos que constroem sentido",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Ângulo",
+          "texto": "De baixo engrandece; de cima diminui; de frente aproxima."
+        },
+        {
+          "n": "02",
+          "titulo": "Enquadramento",
+          "texto": "O que fica dentro e fora da foto muda a história."
+        },
+        {
+          "n": "03",
+          "titulo": "Foco",
+          "texto": "O que está nítido é o que importa para o fotógrafo."
+        },
+        {
+          "n": "04",
+          "titulo": "Cores",
+          "texto": "Tons frios passam distância; tons quentes passam emoção."
+        },
+        {
+          "n": "05",
+          "titulo": "Legenda",
+          "texto": "Pode confirmar, completar ou contradizer a imagem."
+        },
+        {
+          "n": "06",
+          "titulo": "Sequência",
+          "texto": "Fotos em ordem contam uma narrativa."
+        }
+      ],
+      "rodape": "Pergunte: quem escolheu essa imagem e por quê?"
+    },
+    {
+      "numero": 3,
+      "tipo": "pratica",
+      "titulo": "Análise guiada",
+      "subtitulo": "Escolha uma notícia com foto e responda",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Observe",
+          "itens": [
+            "Qual é o ângulo?",
+            "O que está em foco?",
+            "Que cores dominam?"
+          ]
+        },
+        {
+          "n": "02",
+          "titulo": "Relacione",
+          "texto": "A legenda confirma ou muda o que a foto mostra?"
+        },
+        {
+          "n": "03",
+          "titulo": "Compare",
+          "texto": "Procure a mesma notícia em outro site. A foto é diferente? O que muda?"
+        },
+        {
+          "n": "04",
+          "titulo": "Produza",
+          "texto": "Escreva duas legendas para a mesma foto: uma neutra e uma emocional."
+        },
+        {
+          "n": "05",
+          "titulo": "Para refletir",
+          "texto": "Um meme é uma notícia? O que ele tem de parecido e de diferente?"
+        }
+      ],
+      "rodape": "Ler imagens é ler o mundo."
+    }
+  ]
+}

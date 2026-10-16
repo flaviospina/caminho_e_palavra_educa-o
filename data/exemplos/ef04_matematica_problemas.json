@@ -1,0 +1,153 @@
+{
+  "tipo": "apostila",
+  "etapa": "EF_ANOS_INICIAIS",
+  "ano": "4",
+  "componente": "Matemática",
+  "habilidades": [
+    {
+      "codigo": "EF04MA03",
+      "resumo": "Resolver e elaborar problemas com números naturais envolvendo adição e subtração, com estratégias diversas e estimativas."
+    }
+  ],
+  "tema": "Problemas de adição e subtração",
+  "finalidade": "introducao",
+  "estilo": "cartoon_infantil",
+  "capa": {
+    "texto_superior": "Matemática · 4º ano",
+    "titulo": "Resolvendo problemas",
+    "subtitulo": "Somar, tirar e estimar",
+    "frase_inferior": "Pensar antes de calcular."
+  },
+  "paginas": [
+    {
+      "numero": 1,
+      "tipo": "abertura",
+      "titulo": "Resolvendo problemas",
+      "subtitulo": "Somar e subtrair para resolver situações do dia a dia",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Objetivo",
+          "texto": "Resolver problemas com adição e subtração usando estratégias diferentes."
+        },
+        {
+          "n": "02",
+          "titulo": "O que você vai aprender",
+          "itens": [
+            "Ler e entender o problema",
+            "Estimar o resultado",
+            "Calcular de cabeça",
+            "Usar o algoritmo"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Habilidades BNCC",
+          "itens": [
+            "EF04MA03 – Problemas de adição e subtração"
+          ]
+        },
+        {
+          "n": "04",
+          "titulo": "Por que é importante",
+          "itens": [
+            "Fazer compras e dar troco",
+            "Organizar o tempo",
+            "Pensar com lógica"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Como vamos estudar",
+          "itens": [
+            "Exemplos resolvidos",
+            "Estratégias diferentes",
+            "Problemas para criar"
+          ]
+        },
+        {
+          "n": "06",
+          "titulo": "Nas próximas páginas",
+          "itens": [
+            "Página 2 – Estratégias",
+            "Página 3 – Vamos praticar"
+          ]
+        }
+      ],
+      "rodape": "Todo problema tem um caminho."
+    },
+    {
+      "numero": 2,
+      "tipo": "explicacao",
+      "titulo": "Estratégias",
+      "subtitulo": "Vários caminhos para a mesma resposta",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Leia duas vezes",
+          "texto": "Sublinhe os números e a pergunta."
+        },
+        {
+          "n": "02",
+          "titulo": "Estime",
+          "texto": "Arredonde: 198 + 305 é quase 200 + 300 = 500."
+        },
+        {
+          "n": "03",
+          "titulo": "Decomponha",
+          "texto": "347 + 125 = 300 + 100, 40 + 20, 7 + 5. Total 472."
+        },
+        {
+          "n": "04",
+          "titulo": "Conte para trás",
+          "texto": "500 − 180: tire 100, tire 80. Sobra 320."
+        },
+        {
+          "n": "05",
+          "titulo": "Algoritmo",
+          "texto": "Alinhe as ordens e calcule da direita para a esquerda."
+        },
+        {
+          "n": "06",
+          "titulo": "Confira",
+          "texto": "A resposta faz sentido com a estimativa?"
+        }
+      ],
+      "rodape": "Estimar primeiro evita erros grandes."
+    },
+    {
+      "numero": 3,
+      "tipo": "pratica",
+      "titulo": "Vamos praticar",
+      "subtitulo": "Resolva e depois invente o seu",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Problema 1",
+          "texto": "Ana tinha 245 figurinhas e ganhou 138. Quantas tem agora?"
+        },
+        {
+          "n": "02",
+          "titulo": "Problema 2",
+          "texto": "Um ônibus levava 72 pessoas. Desceram 29. Quantas ficaram?"
+        },
+        {
+          "n": "03",
+          "titulo": "Problema 3",
+          "texto": "A escola tem 418 alunos. 185 são do período da tarde. Quantos são da manhã?"
+        },
+        {
+          "n": "04",
+          "titulo": "Crie o seu",
+          "texto": "Escreva um problema com dois números maiores que 100 e troque com um colega."
+        },
+        {
+          "n": "05",
+          "titulo": "Dica",
+          "texto": "Estime antes, calcule depois e confira no final."
+        }
+      ],
+      "rodape": "Errar faz parte: refaça e aprenda."
+    }
+  ]
+}

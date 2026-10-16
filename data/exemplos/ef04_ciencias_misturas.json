@@ -1,0 +1,171 @@
+{
+  "tipo": "apostila",
+  "etapa": "EF_ANOS_INICIAIS",
+  "ano": "4",
+  "componente": "Ciências",
+  "habilidades": [
+    {
+      "codigo": "EF04CI01",
+      "resumo": "Identificar misturas do dia a dia pelas suas propriedades observáveis."
+    }
+  ],
+  "tema": "Misturas no dia a dia",
+  "finalidade": "introducao",
+  "estilo": "doodle_escolar",
+  "capa": {
+    "texto_superior": "Ciências · 4º ano",
+    "titulo": "Misturas no dia a dia",
+    "subtitulo": "O que se mistura e o que não se mistura?",
+    "frase_inferior": "Observar, testar e descobrir."
+  },
+  "paginas": [
+    {
+      "numero": 1,
+      "tipo": "abertura",
+      "titulo": "Misturas no dia a dia",
+      "subtitulo": "Descobrindo o que acontece quando juntamos materiais",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Objetivo",
+          "texto": "Reconhecer misturas presentes na cozinha, no banheiro e na escola."
+        },
+        {
+          "n": "02",
+          "titulo": "O que você vai aprender",
+          "itens": [
+            "O que é uma mistura",
+            "Misturas que se dissolvem",
+            "Misturas que ficam separadas",
+            "Como separar materiais"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Habilidades BNCC",
+          "itens": [
+            "EF04CI01 – Identificar misturas do dia a dia"
+          ]
+        },
+        {
+          "n": "04",
+          "titulo": "Por que é importante",
+          "itens": [
+            "Entender o preparo de alimentos",
+            "Cuidar da água e do ambiente",
+            "Observar com atenção"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Como vamos estudar",
+          "itens": [
+            "Observar exemplos",
+            "Fazer um teste simples",
+            "Registrar o que vimos"
+          ]
+        },
+        {
+          "n": "06",
+          "titulo": "Nas próximas páginas",
+          "itens": [
+            "Página 2 – Tipos de mistura",
+            "Página 3 – Mão na massa"
+          ]
+        }
+      ],
+      "rodape": "Toda mistura começa com uma observação atenta."
+    },
+    {
+      "numero": 2,
+      "tipo": "explicacao",
+      "titulo": "Tipos de mistura",
+      "subtitulo": "Nem toda mistura fica igual",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Mistura homogênea",
+          "texto": "Parece uma coisa só. Exemplo: água com açúcar."
+        },
+        {
+          "n": "02",
+          "titulo": "Mistura heterogênea",
+          "texto": "Dá para ver as partes. Exemplo: água com areia."
+        },
+        {
+          "n": "03",
+          "titulo": "Dissolver",
+          "texto": "Quando um material some dentro do outro, como o sal na sopa."
+        },
+        {
+          "n": "04",
+          "titulo": "Separar",
+          "itens": [
+            "Peneirar",
+            "Filtrar com coador",
+            "Deixar decantar"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Na cozinha",
+          "itens": [
+            "Suco em pó na água",
+            "Salada de frutas",
+            "Óleo e vinagre"
+          ]
+        },
+        {
+          "n": "06",
+          "titulo": "Lembre-se",
+          "texto": "Misturar não muda o que cada material é."
+        }
+      ],
+      "rodape": "Olhe bem: dá para ver as partes ou não?"
+    },
+    {
+      "numero": 3,
+      "tipo": "pratica",
+      "titulo": "Mão na massa",
+      "subtitulo": "Vamos testar em casa ou na escola",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Material",
+          "itens": [
+            "3 copos com água",
+            "Açúcar",
+            "Areia",
+            "Óleo"
+          ]
+        },
+        {
+          "n": "02",
+          "titulo": "Passo a passo",
+          "itens": [
+            "Coloque um material em cada copo",
+            "Mexa dez vezes",
+            "Espere um minuto",
+            "Observe"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Registre",
+          "texto": "Desenhe os três copos e escreva: homogênea ou heterogênea."
+        },
+        {
+          "n": "04",
+          "titulo": "Desafio",
+          "texto": "Como separar a areia da água sem usar as mãos?"
+        },
+        {
+          "n": "05",
+          "titulo": "Para conversar",
+          "texto": "Onde mais você vê misturas no seu dia?"
+        }
+      ],
+      "rodape": "Cientista é quem observa, testa e registra."
+    }
+  ]
+}

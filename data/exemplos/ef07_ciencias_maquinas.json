@@ -1,0 +1,162 @@
+{
+  "tipo": "apostila",
+  "etapa": "EF_ANOS_FINAIS",
+  "ano": "7",
+  "componente": "Ciências",
+  "habilidades": [
+    {
+      "codigo": "EF07CI01",
+      "resumo": "Discutir a aplicação de máquinas simples ao longo da história e propor soluções para tarefas do dia a dia."
+    }
+  ],
+  "tema": "Máquinas simples",
+  "finalidade": "introducao",
+  "estilo": "infografico_limpo",
+  "capa": {
+    "texto_superior": "Ciências · 7º ano",
+    "titulo": "Máquinas simples",
+    "subtitulo": "Menos força, mais resultado",
+    "frase_inferior": "Da alavanca ao parafuso."
+  },
+  "paginas": [
+    {
+      "numero": 1,
+      "tipo": "abertura",
+      "titulo": "Máquinas simples",
+      "subtitulo": "Como a humanidade aprendeu a multiplicar a força",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Objetivo",
+          "texto": "Compreender como alavancas, roldanas e planos inclinados facilitam o trabalho."
+        },
+        {
+          "n": "02",
+          "titulo": "O que você vai aprender",
+          "itens": [
+            "Os seis tipos de máquinas simples",
+            "Onde elas aparecem no dia a dia",
+            "Como calcular a vantagem mecânica",
+            "Exemplos ao longo da história"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Habilidades BNCC",
+          "itens": [
+            "EF07CI01 – Máquinas simples na história e no cotidiano"
+          ]
+        },
+        {
+          "n": "04",
+          "titulo": "Por que é importante",
+          "itens": [
+            "Explica ferramentas que usamos todo dia",
+            "Base da engenharia e da tecnologia",
+            "Desenvolve o raciocínio prático"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Como vamos estudar",
+          "itens": [
+            "Leitura guiada",
+            "Análise de exemplos",
+            "Desafio de projeto"
+          ]
+        },
+        {
+          "n": "06",
+          "titulo": "Nas próximas páginas",
+          "itens": [
+            "Página 2 – Os tipos de máquina",
+            "Página 3 – Projeto: invente a sua"
+          ]
+        }
+      ],
+      "rodape": "Toda grande obra começou com uma máquina simples."
+    },
+    {
+      "numero": 2,
+      "tipo": "explicacao",
+      "titulo": "Os seis tipos",
+      "subtitulo": "Cada uma resolve um problema diferente",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Alavanca",
+          "texto": "Barra que gira em um ponto de apoio. Exemplo: gangorra e tesoura."
+        },
+        {
+          "n": "02",
+          "titulo": "Roldana",
+          "texto": "Roda com corda que muda a direção da força. Exemplo: poço e guindaste."
+        },
+        {
+          "n": "03",
+          "titulo": "Plano inclinado",
+          "texto": "Rampa que troca distância por menos força. Exemplo: rampa de acesso."
+        },
+        {
+          "n": "04",
+          "titulo": "Cunha",
+          "texto": "Dois planos inclinados unidos. Exemplo: faca e machado."
+        },
+        {
+          "n": "05",
+          "titulo": "Parafuso",
+          "texto": "Plano inclinado enrolado. Exemplo: saca-rolhas."
+        },
+        {
+          "n": "06",
+          "titulo": "Roda e eixo",
+          "texto": "Roda presa a um eixo. Exemplo: maçaneta e carrinho de mão."
+        }
+      ],
+      "rodape": "Vantagem mecânica: força de saída dividida pela força de entrada."
+    },
+    {
+      "numero": 3,
+      "tipo": "pratica",
+      "titulo": "Projeto: invente a sua",
+      "subtitulo": "Uma tarefa do cotidiano, uma máquina simples",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Desafio",
+          "texto": "Escolha uma tarefa difícil da escola e crie uma solução com uma máquina simples."
+        },
+        {
+          "n": "02",
+          "titulo": "Etapas",
+          "itens": [
+            "Descreva o problema",
+            "Escolha a máquina",
+            "Desenhe o projeto",
+            "Explique a vantagem"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Materiais sugeridos",
+          "itens": [
+            "Palitos e régua",
+            "Carretel e barbante",
+            "Papelão e cola"
+          ]
+        },
+        {
+          "n": "04",
+          "titulo": "Na história",
+          "texto": "Arquimedes disse: deem-me uma alavanca e moverei o mundo."
+        },
+        {
+          "n": "05",
+          "titulo": "Para refletir",
+          "texto": "Qual máquina simples você mais usou hoje sem perceber?"
+        }
+      ],
+      "rodape": "Engenharia é resolver problemas com inteligência."
+    }
+  ]
+}

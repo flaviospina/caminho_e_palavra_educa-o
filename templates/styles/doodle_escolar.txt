@@ -1,0 +1,10 @@
+Gere UMA ÚNICA página vertical A4 de material didático, vista de frente, sem mockup, colagem de várias páginas, grade de opções ou páginas lado a lado. A imagem é a própria página, preenchida de borda a borda.
+Estilo: {descricao_do_estilo}. Mascote: {mascote}.
+Título em letras recortadas multicoloridas; cada bloco é um mini-cartão com um rabisco relacionado ao tema; setas e adesivos ligam os blocos na ordem numérica.
+Público: {ano} — {etapa}. Componente curricular: {componente}. Tema: {tema}.
+Faixa superior com a etiqueta "{componente} · {ano}" em letras pequenas.
+Título grande: "{titulo}". Subtítulo: "{subtitulo}".
+Blocos numerados, cada um com o título e o texto EXATOS abaixo, em português do Brasil, com acentuação correta:
+{blocos}
+Rodapé: "{rodape}" e, no canto, "Página {numero} de {total}".
+Não acrescente nenhum texto que não esteja nesta lista. Não invente palavras, números ou siglas. Não use personagens de marcas, filmes ou desenhos conhecidos. Não mostre rostos de crianças reais. Confira a grafia de cada palavra antes de entregar.

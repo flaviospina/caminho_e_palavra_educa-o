@@ -1,0 +1,161 @@
+{
+  "tipo": "apostila",
+  "etapa": "EF_ANOS_INICIAIS",
+  "ano": "4",
+  "componente": "Língua Portuguesa",
+  "habilidades": [
+    {
+      "codigo": "EF15LP03",
+      "resumo": "Localizar informações explícitas em textos."
+    },
+    {
+      "codigo": "EF35LP03",
+      "resumo": "Identificar a ideia central do texto, demonstrando compreensão global."
+    }
+  ],
+  "tema": "A ideia central do texto",
+  "finalidade": "introducao",
+  "estilo": "doodle_escolar",
+  "capa": {
+    "texto_superior": "Língua Portuguesa · 4º ano",
+    "titulo": "A ideia central",
+    "subtitulo": "Do que o texto está falando?",
+    "frase_inferior": "Ler é descobrir."
+  },
+  "paginas": [
+    {
+      "numero": 1,
+      "tipo": "abertura",
+      "titulo": "A ideia central",
+      "subtitulo": "Entender o principal de um texto",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Objetivo",
+          "texto": "Localizar informações e descobrir a ideia principal de textos curtos."
+        },
+        {
+          "n": "02",
+          "titulo": "O que você vai aprender",
+          "itens": [
+            "O que é ideia central",
+            "Diferença entre ideia e detalhe",
+            "Pistas no título e no começo",
+            "Resumir em uma frase"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Habilidades BNCC",
+          "itens": [
+            "EF15LP03 – Localizar informações explícitas",
+            "EF35LP03 – Identificar a ideia central"
+          ]
+        },
+        {
+          "n": "04",
+          "titulo": "Por que é importante",
+          "itens": [
+            "Estudar melhor",
+            "Entender notícias",
+            "Contar o que leu"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Como vamos estudar",
+          "itens": [
+            "Ler um texto curto",
+            "Marcar as pistas",
+            "Escrever a ideia central"
+          ]
+        },
+        {
+          "n": "06",
+          "titulo": "Nas próximas páginas",
+          "itens": [
+            "Página 2 – As pistas do texto",
+            "Página 3 – Vamos ler"
+          ]
+        }
+      ],
+      "rodape": "Quem entende a ideia central, entende o texto."
+    },
+    {
+      "numero": 2,
+      "tipo": "explicacao",
+      "titulo": "As pistas do texto",
+      "subtitulo": "Onde a ideia principal se esconde",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Título",
+          "texto": "Costuma anunciar o assunto."
+        },
+        {
+          "n": "02",
+          "titulo": "Primeiro parágrafo",
+          "texto": "Muitas vezes apresenta a ideia central."
+        },
+        {
+          "n": "03",
+          "titulo": "Palavras repetidas",
+          "texto": "O que aparece várias vezes é importante."
+        },
+        {
+          "n": "04",
+          "titulo": "Detalhes",
+          "texto": "Exemplos e descrições apoiam a ideia, mas não são a ideia."
+        },
+        {
+          "n": "05",
+          "titulo": "Pergunta-chave",
+          "texto": "Sobre o que o autor quer que eu pense?"
+        },
+        {
+          "n": "06",
+          "titulo": "Uma frase",
+          "texto": "A ideia central cabe em uma única frase."
+        }
+      ],
+      "rodape": "Título, começo e repetições: três pistas."
+    },
+    {
+      "numero": 3,
+      "tipo": "pratica",
+      "titulo": "Vamos ler",
+      "subtitulo": "Leia o texto e responda",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Texto",
+          "texto": "As abelhas visitam flores para buscar néctar. Ao fazer isso, carregam pólen de uma flor para outra. É assim que muitas plantas produzem frutos."
+        },
+        {
+          "n": "02",
+          "titulo": "Localize",
+          "itens": [
+            "O que as abelhas buscam?",
+            "O que elas carregam?"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Ideia central",
+          "texto": "Escreva em uma frase do que o texto fala."
+        },
+        {
+          "n": "04",
+          "titulo": "Detalhe ou ideia?",
+          "texto": "A frase 'é assim que muitas plantas produzem frutos' é a ideia ou um detalhe?"
+        },
+        {
+          "n": "05",
+          "titulo": "Para conversar",
+          "texto": "Por que as abelhas são importantes para nós?"
+        }
+      ],
+      "rodape": "Ler com atenção é um superpoder."
+    }
+  ]
+}

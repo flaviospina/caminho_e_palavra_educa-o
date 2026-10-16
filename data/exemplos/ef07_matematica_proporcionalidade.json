@@ -1,0 +1,157 @@
+{
+  "tipo": "apostila",
+  "etapa": "EF_ANOS_FINAIS",
+  "ano": "7",
+  "componente": "Matemática",
+  "habilidades": [
+    {
+      "codigo": "EF07MA17",
+      "resumo": "Resolver e elaborar problemas com variação de proporcionalidade direta e inversa entre duas grandezas."
+    }
+  ],
+  "tema": "Proporcionalidade no dia a dia",
+  "finalidade": "introducao",
+  "estilo": "colagem_adesivos",
+  "capa": {
+    "texto_superior": "Matemática · 7º ano",
+    "titulo": "Proporcionalidade",
+    "subtitulo": "Quando uma grandeza puxa a outra",
+    "frase_inferior": "Receitas, velocidade e preço justo."
+  },
+  "paginas": [
+    {
+      "numero": 1,
+      "tipo": "abertura",
+      "titulo": "Proporcionalidade",
+      "subtitulo": "Grandezas que crescem juntas ou em sentidos opostos",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Objetivo",
+          "texto": "Identificar e resolver situações de proporcionalidade direta e inversa."
+        },
+        {
+          "n": "02",
+          "titulo": "O que você vai aprender",
+          "itens": [
+            "Grandezas diretamente proporcionais",
+            "Grandezas inversamente proporcionais",
+            "Regra de três",
+            "Tabelas e gráficos"
+          ]
+        },
+        {
+          "n": "03",
+          "titulo": "Habilidades BNCC",
+          "itens": [
+            "EF07MA17 – Proporcionalidade direta e inversa"
+          ]
+        },
+        {
+          "n": "04",
+          "titulo": "Por que é importante",
+          "itens": [
+            "Ajustar receitas",
+            "Comparar preços",
+            "Planejar viagens"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Como vamos estudar",
+          "itens": [
+            "Situações reais",
+            "Tabelas comparativas",
+            "Problemas para resolver"
+          ]
+        },
+        {
+          "n": "06",
+          "titulo": "Nas próximas páginas",
+          "itens": [
+            "Página 2 – Direta ou inversa?",
+            "Página 3 – Praticando"
+          ]
+        }
+      ],
+      "rodape": "Matemática é a linguagem das relações."
+    },
+    {
+      "numero": 2,
+      "tipo": "explicacao",
+      "titulo": "Direta ou inversa?",
+      "subtitulo": "Dois comportamentos, uma mesma ideia",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Direta",
+          "texto": "Dobra uma, dobra a outra. Exemplo: 2 pães custam 6 reais; 4 pães custam 12."
+        },
+        {
+          "n": "02",
+          "titulo": "Inversa",
+          "texto": "Dobra uma, a outra cai pela metade. Exemplo: 2 pintores levam 6 dias; 4 levam 3."
+        },
+        {
+          "n": "03",
+          "titulo": "Constante",
+          "texto": "Na direta, a divisão é constante. Na inversa, a multiplicação é constante."
+        },
+        {
+          "n": "04",
+          "titulo": "Regra de três",
+          "itens": [
+            "Monte a tabela",
+            "Identifique o tipo",
+            "Resolva a equação"
+          ]
+        },
+        {
+          "n": "05",
+          "titulo": "Gráfico",
+          "texto": "Direta: reta que passa pela origem. Inversa: curva que desce."
+        },
+        {
+          "n": "06",
+          "titulo": "Atenção",
+          "texto": "Nem toda relação é proporcional: idade e altura, por exemplo."
+        }
+      ],
+      "rodape": "Pergunte sempre: se uma dobra, o que acontece com a outra?"
+    },
+    {
+      "numero": 3,
+      "tipo": "pratica",
+      "titulo": "Praticando",
+      "subtitulo": "Resolva com tabela ou regra de três",
+      "blocos": [
+        {
+          "n": "01",
+          "titulo": "Receita",
+          "texto": "Para 4 pessoas usam-se 300 g de arroz. E para 10 pessoas?"
+        },
+        {
+          "n": "02",
+          "titulo": "Viagem",
+          "texto": "A 60 km/h a viagem dura 3 h. A 90 km/h, quanto tempo leva?"
+        },
+        {
+          "n": "03",
+          "titulo": "Torneiras",
+          "texto": "3 torneiras enchem um tanque em 8 h. Em quanto tempo 4 torneiras enchem?"
+        },
+        {
+          "n": "04",
+          "titulo": "Desconto",
+          "texto": "Um produto de 80 reais tem 15% de desconto. Qual o preço final?"
+        },
+        {
+          "n": "05",
+          "titulo": "Crie o seu",
+          "texto": "Invente um problema de proporcionalidade inversa sobre a sua escola."
+        }
+      ],
+      "rodape": "Compare, calcule e confira se faz sentido."
+    }
+  ]
+}
