@@ -8,7 +8,7 @@
   <div class="cartoes">
     <article class="cartao">
       <h2>Meus projetos</h2>
-      <p>O assistente de criação de apostilas chega na Fase 3. Por enquanto, confira seu cadastro e a base BNCC.</p>
+      <p><a class="botao" href="<?= e(url('/projetos/novo')) ?>">Criar material</a> &nbsp; <a href="<?= e(url('/projetos')) ?>">Ver meus projetos</a></p>
     </article>
     <?php if (\App\Auth::isAdmin()): ?>
       <article class="cartao"><h2>Escolas e usuários</h2><p><a href="<?= e(url('/admin/escolas')) ?>">Cadastrar escolas</a> · <a href="<?= e(url('/admin/usuarios')) ?>">Cadastrar usuários</a></p></article>

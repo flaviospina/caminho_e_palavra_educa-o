@@ -46,6 +46,10 @@ final class Router
         $method = strtoupper($method);
         $path = self::normalize((string) parse_url($uri, PHP_URL_PATH));
         $path = self::stripBasePath($path, $basePath ?? BASE_PATH);
+        if (PHP_SAPI === 'cli') {
+            // Nos testes a query string vem na URI; no servidor o PHP já preenche $_GET.
+            parse_str((string) parse_url($uri, PHP_URL_QUERY), $_GET);
+        }
         if ($method === 'HEAD') {
             $method = 'GET';
         }

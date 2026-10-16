@@ -10,7 +10,9 @@ use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\HealthController;
 use App\Controllers\HomeController;
+use App\Controllers\Api\BnccApiController;
 use App\Controllers\PocController;
+use App\Controllers\ProjectsController;
 use App\Controllers\TermController;
 use App\Guard;
 use App\Router;
@@ -38,6 +40,22 @@ return static function (Router $router): void {
 
     // Área logada
     $router->get('/painel', Guard::auth([new DashboardController(), 'index']));
+
+    // Projetos — assistente de conteúdo e revisão (Fase 3)
+    $projects = new ProjectsController();
+    $router->get('/projetos', Guard::auth([$projects, 'index']));
+    $router->get('/projetos/novo', Guard::auth([$projects, 'newForm']));
+    $router->post('/projetos', Guard::auth([$projects, 'create']));
+    $router->get('/projetos/{id}', Guard::auth([$projects, 'show']));
+    $router->get('/projetos/{id}/revisar', Guard::auth([$projects, 'reviewForm']));
+    $router->post('/projetos/{id}/revisar', Guard::auth([$projects, 'saveReview']));
+    $router->post('/projetos/{id}/reverter', Guard::auth([$projects, 'revert']));
+    $router->get('/projetos/{id}/plano', Guard::auth([$projects, 'plan']));
+    $router->get('/projetos/{id}/plano.pdf', Guard::auth([$projects, 'planPdf']));
+    $router->post('/projetos/{id}/excluir', Guard::auth([$projects, 'delete']));
+    $api = new BnccApiController();
+    $router->get('/api/bncc/componentes', Guard::auth([$api, 'components']));
+    $router->get('/api/bncc/habilidades', Guard::auth([$api, 'skills']));
 
     // Admin (Secretaria/CECAPE)
     $schools = new SchoolsController();

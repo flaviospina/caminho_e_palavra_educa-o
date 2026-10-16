@@ -25,6 +25,8 @@ $flashes = \App\Request::pullFlash();
   <nav class="menu" :class="{ 'menu-aberto': aberto }">
     <?php if ($usuarioLogado): ?>
       <a href="<?= e(url('/painel')) ?>">Painel</a>
+      <a href="<?= e(url('/projetos')) ?>">Meus projetos</a>
+      <a href="<?= e(url('/projetos/novo')) ?>">Criar material</a>
       <?php if (\App\Auth::isAdmin()): ?>
         <a href="<?= e(url('/admin/escolas')) ?>">Escolas</a>
         <a href="<?= e(url('/admin/usuarios')) ?>">Usuários</a>
