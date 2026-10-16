@@ -62,6 +62,19 @@
    `templates/styles/referencias/` e descritas em `templates/styles/REFERENCIAS.md`,
    com um mapa inicial de 6 estilos a confirmar na Fase 1.
 
+## Ambiente de produção temporário (HostGator) — confirmado em 16/10/2026
+
+- URL: `https://cecapescs.com.br/materiais` (conta cPanel `itthri79`).
+- `/health` → 200 em produção: PHP 8.3.35, todas as extensões, `storage` gravável.
+- Banco `itthri79_materiais`, **MySQL 5.7.44** (não 8). Charset padrão do banco
+  era `utf8` (mb3); a conexão força `utf8mb4` e recomendou-se alterar o
+  agrupamento do banco para `utf8mb4_unicode_ci` no phpMyAdmin.
+- **Regra para a Fase 2:** o `schema.sql` deve rodar tanto no MySQL 5.7 quanto
+  no 8: `utf8mb4_unicode_ci` explícito em toda tabela, sem `utf8mb4_0900_*`,
+  sem `CHECK` como garantia (validar no PHP), sem `DEFAULT (expressão)`, sem
+  funções de janela, chaves únicas/índices em VARCHAR com no máximo 191
+  caracteres, `JSON` apenas como armazenamento (sem depender de índices JSON).
+
 ## Pendências para a Fase 1
 
 - Confirmar na documentação oficial os IDs e preços dos modelos de imagem

@@ -38,9 +38,15 @@ marque as extensões `pdo_mysql`, `mbstring`, `curl`, `gd`, `openssl`,
 ### A3. Banco de dados
 
 cPanel → **Bancos de Dados MySQL®**: crie o banco `materiais` e o usuário
-`materiais` (o cPanel adiciona o prefixo da conta, ex.: `cecap_materiais`),
+`materiais` (o cPanel adiciona o prefixo da conta, ex.: `itthri79_materiais`),
 dê **todos os privilégios** e anote a senha. Crie também `materiais_test` se
 quiser rodar os testes no servidor.
+
+Depois, no **phpMyAdmin**, selecione o banco → aba **Operações** →
+*Agrupamento* → `utf8mb4_unicode_ci` → Executar. O HostGator cria o banco em
+`utf8` (mb3); o sistema força `utf8mb4` na conexão e nas tabelas, mas o padrão
+do banco alinhado evita avisos. O MySQL do HostGator é 5.7; o sistema é
+compatível com 5.7 e 8.
 
 ### A4. Configurar o `.env`
 
@@ -52,8 +58,8 @@ APP_ENV=production
 APP_DEBUG=0
 BASE_URL=https://cecapescs.com.br/materiais
 DB_HOST=localhost
-DB_NAME=cecap_materiais
-DB_USER=cecap_materiais
+DB_NAME=itthri79_materiais
+DB_USER=itthri79_materiais
 DB_PASS=<senha>
 AI_MOCK=1
 ```
