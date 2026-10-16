@@ -139,6 +139,21 @@ final class MockEngine implements ImageEngine, TextEngine
             $y += 12 * $s;
         }
 
+        // Capa: título grande centralizado
+        if (!empty($c['capa'])) {
+            imagefilledrectangle($img, 0, (int) (150 * $s), $w, (int) ($h - 90 * $s), $accent);
+            $this->paragraph($img, (string) ($c['titulo'] ?? ''), 64 * $s, $m, $h * 0.3, $w - 2 * $m, $white, true);
+            $this->paragraph($img, (string) ($c['subtitulo'] ?? ''), 26 * $s, $m, $h * 0.55, $w - 2 * $m, $white, false);
+            imagefilledrectangle($img, 0, (int) ($h - 90 * $s), $w, $h, $dark);
+            $this->text($img, (string) ($c['rodape'] ?? ''), 16 * $s, $m, $h - 50 * $s, $white, false, $w - 2 * $m);
+            $wm = imagecolorallocatealpha($img, 220, 38, 38, 90);
+            imagettftext($img, (int) (60 * $s), 30, (int) ($w * 0.15), (int) ($h * 0.6), $wm, $this->font(true), 'SIMULADO');
+            ob_start();
+            imagepng($img, null, 6);
+            imagedestroy($img);
+            return (string) ob_get_clean();
+        }
+
         // Blocos em duas colunas
         $blocos = array_values($c['blocos'] ?? []);
         if ($blocos === []) {

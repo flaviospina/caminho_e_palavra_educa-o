@@ -16,6 +16,9 @@ final class EngineFactory
         'AI_TIMEOUT'         => '360',
         'AI_RETRIES'         => '2',
         'AI_BACKOFF'         => '5',
+        'IMAGE_ENGINE'       => 'gemini',
+        'VERIFY_ENABLED'     => '1',
+        'GEMINI_VISION_MODEL' => 'gemini-3.8-flash',
         'TEXT_ENGINE'        => 'gemini',
         'GEMINI_TEXT_MODEL'  => 'gemini-3.8-flash',
         'TEXT_TIMEOUT'       => '120',
@@ -79,6 +82,24 @@ final class EngineFactory
                 return new MockEngine('mock', 'mock-v1');
         }
         throw new AiException("Motor de imagem desconhecido: {$name}. Use gemini, openai ou mock.");
+    }
+
+    /** Motor de imagem usado na geração das páginas (IMAGE_ENGINE, padrão gemini). */
+    public function defaultImageEngine(): ImageEngine
+    {
+        return $this->imageEngine($this->setting('IMAGE_ENGINE') ?: 'gemini');
+    }
+
+    /** Conferência automática: visão do Gemini, ou simulada com AI_MOCK=1. Null = desligada (VERIFY_ENABLED=0). */
+    public function verifier(): ?Verifier
+    {
+        if (!in_array(strtolower($this->setting('VERIFY_ENABLED')), ['1', 'true', 'sim', 'on'], true)) {
+            return null;
+        }
+        if ($this->mock()) {
+            return new MockVerifier();
+        }
+        return new GeminiVerifier((string) env('GEMINI_API_KEY', ''), $this->setting('GEMINI_VISION_MODEL'), max(10, (int) $this->setting('TEXT_TIMEOUT')));
     }
 
     /** Motor de texto: TEXT_ENGINE=gemini (padrão) ou mock; com AI_MOCK=1 é sempre simulado. */

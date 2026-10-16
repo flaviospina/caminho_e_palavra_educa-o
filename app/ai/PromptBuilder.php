@@ -56,6 +56,70 @@ final class PromptBuilder
         return new ImageRequest($prompt, 'A4', $quality, trim($label), $context);
     }
 
+    /** Monta o pedido de imagem da CAPA (modelo compartilhado templates/styles/_capa.txt). */
+    public function buildCover(array $doc, string $quality = 'high'): ImageRequest
+    {
+        $style = Styles::get((string) ($doc['estilo'] ?? ''));
+        $file = Styles::dir() . '/_capa.txt';
+        $template = @file_get_contents($file);
+        if ($template === false) {
+            throw new AiException('Modelo de capa não encontrado.', $file);
+        }
+        $capa = $doc['capa'] ?? [];
+        $vars = [
+            '{descricao_do_estilo}' => (string) $style['descricao'],
+            '{mascote}'             => (string) $style['mascote'],
+            '{ano}'                 => self::anoLabel((string) ($doc['ano'] ?? '')),
+            '{etapa}'               => self::etapaLabel((string) ($doc['etapa'] ?? '')),
+            '{componente}'          => (string) ($doc['componente'] ?? ''),
+            '{tema}'                => (string) ($doc['tema'] ?? ''),
+            '{texto_superior}'      => (string) ($capa['texto_superior'] ?? ''),
+            '{titulo}'              => (string) ($capa['titulo'] ?? $doc['tema'] ?? ''),
+            '{subtitulo}'           => (string) ($capa['subtitulo'] ?? ''),
+            '{frase_inferior}'      => (string) ($capa['frase_inferior'] ?? ''),
+        ];
+        $prompt = trim(strtr($template, $vars));
+        $context = [
+            'capa' => true, 'estilo' => $style['chave'], 'etiqueta' => $vars['{texto_superior}'],
+            'titulo' => $vars['{titulo}'], 'subtitulo' => $vars['{subtitulo}'], 'rodape' => $vars['{frase_inferior}'],
+            'blocos' => [], 'numero' => 0, 'total' => count($doc['paginas'] ?? []), 'cores' => $style['cores'] ?? [],
+        ];
+        return new ImageRequest($prompt, 'A4', $quality, 'capa', $context);
+    }
+
+    /** Textos que devem aparecer na imagem de uma página (0 = capa), para a conferência. @return string[] */
+    public static function expectedTexts(array $doc, int $pageNumber): array
+    {
+        if ($pageNumber === 0) {
+            $c = $doc['capa'] ?? [];
+            return array_values(array_filter(array_map('trim', [(string) ($c['texto_superior'] ?? ''), (string) ($c['titulo'] ?? ''), (string) ($c['subtitulo'] ?? ''), (string) ($c['frase_inferior'] ?? '')]), fn($t) => $t !== ''));
+        }
+        $out = [];
+        foreach ($doc['paginas'] ?? [] as $p) {
+            if ((int) ($p['numero'] ?? 0) !== $pageNumber) {
+                continue;
+            }
+            $out[] = (string) $p['titulo'];
+            if (!empty($p['subtitulo'])) {
+                $out[] = (string) $p['subtitulo'];
+            }
+            foreach ($p['blocos'] ?? [] as $b) {
+                $out[] = (string) $b['titulo'];
+                if (!empty($b['texto'])) {
+                    $out[] = (string) $b['texto'];
+                }
+                foreach ($b['itens'] ?? [] as $it) {
+                    $out[] = (string) $it;
+                }
+            }
+            if (!empty($p['rodape'])) {
+                $out[] = (string) $p['rodape'];
+            }
+            $out[] = 'Página ' . $pageNumber . ' de ' . count($doc['paginas']);
+        }
+        return array_values(array_filter(array_map('trim', $out), fn($t) => $t !== ''));
+    }
+
     /** Localiza a página pelo campo "numero". */
     public function findPage(array $doc, int $pageNumber): array
     {

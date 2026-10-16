@@ -31,12 +31,15 @@ final class ImageResult
     public function save(string $path): string
     {
         $dir = dirname($path);
-        if (!is_dir($dir) && !@mkdir($dir, 0750, true) && !is_dir($dir)) {
+        // 0755/0644: o worker (cron/systemd) e o PHP da web podem rodar como usuários
+        // diferentes; a pasta storage/ fica fora de public/, então leitura ampla é segura.
+        if (!is_dir($dir) && !@mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new AiException('Não foi possível criar a pasta de destino da imagem.', $dir);
         }
         if (file_put_contents($path, $this->png) === false) {
             throw new AiException('Não foi possível gravar a imagem gerada.', $path);
         }
+        @chmod($path, 0644);
         return $path;
     }
 
