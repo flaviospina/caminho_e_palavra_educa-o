@@ -101,3 +101,10 @@ Conteúdo (Fase 3): `ContentPromptBuilder` → `TextEngine` (`GeminiText` ou
 (professor). Plano de aula sem IA em `LessonPlanService`; PDF em `PdfService`
 (mPDF com fontes de `templates/fonts`; `vendor/mpdf/mpdf/ttfonts` não é
 versionado).
+Fila (Fase 4): `GenerationService` enfileira (`generation_jobs`, um job por
+página, capa = número 0) → `GenerationWorker` (`workers/generation_worker.php`
+`--lote` no cron do cPanel ou `--continuo` no systemd) gera com
+`EngineFactory::defaultImageEngine()`, confere com `Verifier`
+(`GeminiVerifier`/`MockVerifier`), regenera até 2×, grava `usage_log`,
+atualiza `pages` e `projects`. Jobs órfãos voltam pela `recoverStale()`.
+Nenhuma requisição web chama motor de imagem.

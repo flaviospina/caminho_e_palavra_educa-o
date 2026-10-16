@@ -5,16 +5,16 @@
 
 ## Fase atual
 
-**FASE 3 — Assistente de conteúdo (texto) e revisão: concluída, aguardando
-`APROVADO FASE 3`.**
+**FASE 4 — Fila, geração de imagem e conferência automática: concluída,
+aguardando `APROVADO FASE 4`.**
 
 | Fase | Situação |
 |---|---|
 | 0 — Fundação | ✅ aprovada (16/10/2026) |
 | 1 — Prova de conceito dos motores de IA | ✅ aprovada (16/10/2026) |
 | 2 — Banco, BNCC e autenticação | ✅ aprovada (16/10/2026) |
-| 3 — Assistente de conteúdo e revisão | ✅ concluída (aguardando aprovação) |
-| 4 — Fila, geração de imagem e conferência | ⏳ |
+| 3 — Assistente de conteúdo e revisão | ✅ aprovada (16/10/2026) |
+| 4 — Fila, geração de imagem e conferência | ✅ concluída (aguardando aprovação) |
 | 5 — Interface completa, capas, cartazes e PDF | ⏳ |
 | 6 — Modo editável | ⏳ |
 | 7 — Diferenciais pedagógicos | ⏳ |
@@ -61,6 +61,16 @@
 | Plano de aula exportável em PDF de texto | ✅ | `LessonPlanService` + mPDF com DejaVu; `pdftotext` extrai "Plano de aula", "EF04CI01", "Avaliação"; teste "plano de aula" |
 | Testes: geração simulada, validação, edição, permissão (professor só os próprios; coordenador os da escola) | ✅ | `fase3_conteudo.php` e `fase3_projetos.php` |
 | Interface utilizável em celular (360 px) sem rolagem horizontal | ✅ | Chromium headless (Playwright) a 360 px: painel, Meus projetos, assistente (passo 1), revisão, projeto e plano de aula com `scrollWidth = 360`; contador de limite funcionando; capturas em `docs/capturas/`. Os passos 2 e 3 do assistente dependem do Alpine.js via CDN, bloqueado na rede deste ambiente; o envio do formulário foi verificado por POST direto |
+
+## Fase 4 — critérios de aceite
+
+| Critério | Status | Evidência |
+|---|---|---|
+| Em modo simulado, capa + 3 páginas passam de `pendente` a `pronto` sem intervenção | ✅ | Teste "worker: em modo simulado…": 4 jobs → 4 PNG 1024×1536, páginas e projeto `pronto`; `php workers/generation_worker.php --lote` idem |
+| Derrubar o worker no meio de um job não perde o job | ✅ | Teste "retomada": job reivindicado e abandonado em `gerando` → `recoverStale()` devolve à fila → processado → `pronto` |
+| Conferência simulada com erro dispara regeneração e para após 2 tentativas, marcando revisão manual | ✅ | Teste "conferência": 1 geração + 2 regenerações, página `revisar`, `check_result` com os problemas |
+| Nenhuma requisição web espera a IA de imagem | ✅ | `POST /projetos/{id}/gerar` só cria jobs (responde em < 2 s, nenhum motor chamado); geração só no worker |
+| `usage_log` registra cada chamada com custo estimado | ✅ | Uma linha por geração (`context=apostila`) e por conferência (`context=conferencia`), com usuário, escola, projeto/página, tokens e `cost_usd` |
 
 ## Modelos e preços (consultados em 16/10/2026)
 
@@ -153,7 +163,24 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
     professor vê os motivos e nada é salvo. Com `AI_MOCK=1` o motor simulado
     monta um conteúdo coerente com o pedido (etapa, ano, componente,
     habilidades, tema, nº de páginas).
-18. **Imagens de referência** do coordenador salvas em
+18. **Fase 4 — fila e worker.** Reivindicação atômica com `SELECT … FOR UPDATE`
+    (MySQL 5.7/8), `locked_by/locked_at`, até 3 tentativas com espera crescente
+    para erros recuperáveis (429/5xx/rede) e `recoverStale()` para jobs órfãos
+    (worker derrubado): voltam à fila após `WORKER_STALE_MINUTES`. Dois modos:
+    `--lote` (Cron Job do cPanel no HostGator, a cada minuto, com trava em
+    arquivo contra sobreposição) e `--continuo` (systemd no cecape-server,
+    `deploy/materiais-worker.service`).
+19. **Conferência automática** por visão (`GeminiVerifier`, modelo
+    `GEMINI_VISION_MODEL`, padrão `gemini-3.8-flash`): compara os textos lidos
+    com os do JSON aprovado; reprovação regenera até 2 vezes e depois marca a
+    página como `revisar` (o projeto fica `pronto` com a página sinalizada).
+    Se a conferência estiver indisponível (erro de API), a página é aprovada
+    com aviso para não travar a fila; `VERIFY_ENABLED=0` desliga.
+20. **Capa** gerada já nesta fase com um modelo compartilhado
+    (`templates/styles/_capa.txt`); a identidade visual da escola entra na
+    Fase 5. Imagens em `storage/projects/<id>/` (privadas), servidas por
+    `/projetos/{id}/pagina/{n}.png` com verificação de acesso.
+21. **Imagens de referência** do coordenador salvas em
    `templates/styles/referencias/` e descritas em `templates/styles/REFERENCIAS.md`,
    com um mapa inicial de 6 estilos a confirmar na Fase 1.
 
@@ -170,15 +197,14 @@ os valores nas páginas oficiais de preços ao ativar as chaves.
   funções de janela, chaves únicas/índices em VARCHAR com no máximo 191
   caracteres, `JSON` apenas como armazenamento (sem depender de índices JSON).
 
-## Pendências para a Fase 4
+## Pendências para a Fase 5
 
-- Coordenador: testar o assistente com `AI_MOCK=0` e `GEMINI_API_KEY` (texto
-  real pelo `gemini-3.8-flash`) e conferir o preço do modelo na página oficial.
-- Coordenador: confirmar o teste dos motores de imagem pela `/poc`.
-- Fase 4: fila `generation_jobs`, worker CLI (no HostGator via Cron Job do
-  cPanel; no cecape-server via systemd), geração por página a partir de
-  `pages` + `PromptBuilder`, conferência automática, galeria e custo por
-  geração. O botão "Gerar imagens" entra na tela do projeto (passo 5).
+- Coordenador: criar o Cron Job no cPanel (ver LEIA-ME A6f) e, com o
+  faturamento do Google ativo, gerar as páginas de um projeto real.
+- Fase 5: capas com identidade visual da escola/Secretaria, cartazes de
+  eventos (Story 9:16, Feed 1:1, A4), montagem do PDF no navegador com
+  `pdf-lib`, busca e duplicação em Meus projetos, biblioteca de estilos com
+  prévia.
 
 ## Ambiente de desenvolvimento (contêiner do Claude Code)
 

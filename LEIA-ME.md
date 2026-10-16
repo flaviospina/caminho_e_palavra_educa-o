@@ -156,6 +156,32 @@ Novas linhas do `.env` (copie do `.env.example`): `TEXT_ENGINE`,
 `GEMINI_TEXT_MODEL`, `TEXT_TIMEOUT`. A pasta `storage/cache` precisa ser
 gravável (cache do gerador de PDF).
 
+### A6f. Fila de geração de imagens (Fase 4) — Cron Job no cPanel
+
+A geração das páginas roda fora da requisição web, por um "worker". No
+HostGator ele é executado por **Cron Job** a cada minuto:
+
+1. cPanel → **Cron Jobs** → "Adicionar novo cron job".
+2. Configuração comum: **Uma vez por minuto** (`* * * * *`).
+3. Comando (ajuste o caminho da sua conta):
+   ```
+   /usr/local/bin/php /home1/itthri79/cecapescs.com.br/materiais/workers/generation_worker.php --lote >> /home1/itthri79/cecapescs.com.br/materiais/storage/logs/worker.log 2>&1
+   ```
+   O worker processa a fila por até `WORKER_MAX_SECONDS` segundos (padrão 50)
+   e sai; uma trava em arquivo impede dois lotes ao mesmo tempo. Se o cPanel
+   só permitir intervalos de 5 minutos, use `*/5 * * * *` e aumente
+   `WORKER_MAX_SECONDS=280` no `.env`.
+4. Novas linhas do `.env` (copie do `.env.example`): `IMAGE_ENGINE=gemini`,
+   `VERIFY_ENABLED=1`, `GEMINI_VISION_MODEL=gemini-3.8-flash`,
+   `WORKER_MAX_SECONDS=50`, `WORKER_STALE_MINUTES=10`.
+5. Fluxo na tela: projeto **revisado** → "Gerar imagens das páginas" → a tela
+   mostra o progresso (atualiza a cada 5 s) e avisa "Pronto!". Cada página
+   passa por conferência automática; se o texto da imagem não bater com o
+   aprovado, o sistema regenera até 2 vezes e depois marca "Revisar
+   manualmente", com "Gerar esta página de novo" disponível.
+6. Acompanhamento: `storage/logs/worker.log` (lotes) e `storage/logs/app.log`
+   (erros detalhados). Custos em `usage_log` (tela PoC mostra os últimos).
+
 ### A7. Limitações no HostGator
 
 - Não há `systemd`: o worker de geração (Fase 4) rodará por **Cron Job** do
@@ -267,6 +293,13 @@ servidos como estáticos). Nada em `storage/` executa PHP. Os arquivos
 Igual à Parte A (A6b e A6c): importe `sql/schema.sql` no phpMyAdmin do
 HestiaCP e entre como admin. Pelo terminal web também é
 possível rodar `php tools/poc_generate.php data/exemplos/<arquivo>.json --pagina=1`.
+
+### B8c. Worker da fila (systemd)
+
+No terminal web do HestiaCP, como root: copie `deploy/materiais-worker.service`
+para `/etc/systemd/system/`, ajuste `User`, `WorkingDirectory` e o caminho do
+PHP, e rode `systemctl daemon-reload && systemctl enable --now materiais-worker`.
+Logs: `journalctl -u materiais-worker -f`. O serviço reinicia sozinho.
 
 ### B9. Rodar os testes no servidor (opcional, recomendado)
 
