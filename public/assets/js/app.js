@@ -129,3 +129,29 @@ document.addEventListener('DOMContentLoaded', () => {
     atualizar();
   });
 });
+
+// Tela do projeto: acompanha a fila de geração (consulta a cada 5 s) e avisa quando ficar pronto.
+registrarAlpine(() => {
+  Alpine.data('geracaoProjeto', (cfg) => ({
+    estado: cfg.inicial, timer: null, avisou: false,
+    get precisaRevisar() { return (this.estado.paginas || []).some((p) => p.status === 'revisar'); },
+    iniciar() { if (!this.estado.concluido) { this.timer = setInterval(() => this.atualizar(), 5000); } },
+    async atualizar() {
+      try {
+        const r = await fetch(cfg.url, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+        const d = await r.json();
+        if (d.ok) { this.estado = d.data; }
+        if (this.estado.concluido) {
+          clearInterval(this.timer);
+          if (!this.avisou) {
+            this.avisou = true;
+            document.title = (this.estado.status === 'pronto' ? '✅ Pronto! ' : '⚠️ ') + document.title;
+            if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification('Materiais Visuais', { body: this.estado.status === 'pronto' ? 'Suas páginas estão prontas.' : 'A geração terminou com erro.' });
+            }
+          }
+        }
+      } catch (e) { /* tenta de novo no próximo ciclo */ }
+    },
+  }));
+});

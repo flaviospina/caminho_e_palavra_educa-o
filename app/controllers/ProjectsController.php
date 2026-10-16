@@ -18,6 +18,7 @@ use App\Models\Project;
 use App\Request;
 use App\Response;
 use App\Services\ContentService;
+use App\Services\GenerationService;
 use App\Services\LessonPlanService;
 use App\View;
 use InvalidArgumentException;
@@ -187,6 +188,73 @@ final class ProjectsController
         $bytes = $svc->pdf($plan);
         $nome = 'plano-de-aula-' . (int) $project['id'] . '.pdf';
         return new Response($bytes, 200, ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'inline; filename="' . $nome . '"', 'Content-Length' => (string) strlen($bytes)]);
+    }
+
+    /** POST /projetos/{id}/gerar — enfileira a geração de todas as páginas (a web não espera a IA). */
+    public function generate(array $args): Response
+    {
+        [$project, $resp] = $this->load($args, true);
+        if ($resp !== null) {
+            return $resp;
+        }
+        $id = (int) $project['id'];
+        if (!Csrf::check(Request::post(Csrf::FIELD))) {
+            Request::flash('erro', 'Sessão expirada. Tente de novo.');
+            return Response::redirect(url('/projetos/' . $id));
+        }
+        try {
+            $jobs = GenerationService::enqueueProject($project, (int) Auth::id());
+            Request::flash('ok', count($jobs) . ' página(s) enviada(s) para a fila de geração. Acompanhe o progresso aqui; avisaremos quando ficar pronto.');
+        } catch (InvalidArgumentException $e) {
+            Request::flash('erro', $e->getMessage());
+        }
+        return Response::redirect(url('/projetos/' . $id));
+    }
+
+    /** POST /projetos/{id}/paginas/{n}/regenerar — reenfileira uma página. */
+    public function regeneratePage(array $args): Response
+    {
+        [$project, $resp] = $this->load($args, true);
+        if ($resp !== null) {
+            return $resp;
+        }
+        $id = (int) $project['id'];
+        if (!Csrf::check(Request::post(Csrf::FIELD))) {
+            Request::flash('erro', 'Sessão expirada. Tente de novo.');
+            return Response::redirect(url('/projetos/' . $id));
+        }
+        try {
+            GenerationService::enqueuePage($project, (int) ($args['n'] ?? -1), (int) Auth::id());
+            Request::flash('ok', 'Página enviada para a fila. A nova versão substitui a atual quando ficar pronta.');
+        } catch (InvalidArgumentException $e) {
+            Request::flash('erro', $e->getMessage());
+        }
+        return Response::redirect(url('/projetos/' . $id));
+    }
+
+    /** GET /projetos/{id}/status — JSON consultado a cada 5 s pela tela do projeto. */
+    public function status(array $args): Response
+    {
+        [$project, $resp] = $this->load($args);
+        if ($resp !== null) {
+            return Response::json(['ok' => false, 'data' => null, 'mensagem' => 'Sem acesso.'], $resp->status === 404 ? 404 : 403);
+        }
+        return Response::json(['ok' => true, 'data' => GenerationService::status($project), 'mensagem' => '']);
+    }
+
+    /** GET /projetos/{id}/pagina/{n}.png — imagem gerada (pasta privada), só para quem tem acesso. */
+    public function pageImage(array $args): Response
+    {
+        [$project, $resp] = $this->load($args);
+        if ($resp !== null) {
+            return new Response('Sem acesso.', $resp->status, ['Content-Type' => 'text/plain; charset=utf-8']);
+        }
+        $page = Page::findByNumber((int) $project['id'], (int) ($args['n'] ?? -1));
+        $file = $page === null ? null : Page::imageFile($page);
+        if ($file === null) {
+            return new Response('Imagem ainda não gerada.', 404, ['Content-Type' => 'text/plain; charset=utf-8']);
+        }
+        return new Response((string) file_get_contents($file), 200, ['Content-Type' => 'image/png', 'Cache-Control' => 'private, max-age=60']);
     }
 
     /** POST /projetos/{id}/excluir — exclui rascunho (só autor ou admin). */

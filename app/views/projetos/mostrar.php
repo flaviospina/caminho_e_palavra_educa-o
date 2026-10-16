@@ -17,13 +17,50 @@ include ROOT_PATH . '/app/views/projetos/_passos.php';
     <article class="cartao"><h2>Habilidades BNCC</h2><ul class="lista-compacta"><?php foreach ($doc['habilidades'] as $h): ?><li><strong><?= e($h['codigo']) ?></strong> — <?= e($h['resumo']) ?></li><?php endforeach; ?></ul></article>
     <article class="cartao"><h2>Próximas ações</h2>
       <p>
-        <?php if ($pode_editar): ?><a class="botao" href="<?= e(url('/projetos/' . $projeto['id'] . '/revisar')) ?>">Revisar conteúdo</a><?php endif; ?>
+        <?php if ($pode_editar): ?><a class="botao botao-leve" href="<?= e(url('/projetos/' . $projeto['id'] . '/revisar')) ?>"><?= $projeto['status'] === 'rascunho' ? 'Revisar e aprovar o conteúdo' : 'Revisar conteúdo' ?></a><?php endif; ?>
         <a class="botao botao-leve" href="<?= e(url('/projetos/' . $projeto['id'] . '/plano')) ?>">Plano de aula</a>
         <a class="botao botao-leve" href="<?= e(url('/projetos/' . $projeto['id'] . '/plano.pdf')) ?>">PDF do plano</a>
       </p>
-      <p class="nota">Conteúdo salvo em Meus projetos como <?= e(mb_strtolower($status[$projeto['status']] ?? $projeto['status'])) ?>. A geração das páginas em imagem é o próximo módulo do sistema e usará exatamente este texto.</p>
+      <?php if ($pode_editar && $projeto['status'] === 'rascunho'): ?>
+        <p class="nota">Para gerar as imagens, primeiro abra "Revisar e aprovar o conteúdo" e salve (mesmo sem alterar nada).</p>
+      <?php elseif ($pode_editar && in_array($projeto['status'], ['revisado', 'pronto', 'erro'], true)): ?>
+        <form method="post" action="<?= e(url('/projetos/' . $projeto['id'] . '/gerar')) ?>" class="form-inline" onsubmit="return confirm('<?= $projeto['status'] === 'revisado' ? 'Gerar as imagens de todas as páginas? Cada página consome créditos de IA.' : 'Gerar TODAS as páginas de novo? As imagens atuais serão substituídas e cada página consome créditos.' ?>')">
+          <?= \App\Csrf::field() ?><button type="submit" class="botao"><?= $projeto['status'] === 'revisado' ? 'Gerar imagens das páginas' : 'Gerar todas as páginas de novo' ?></button>
+        </form>
+        <p class="nota"><?= AI_MOCK ? 'Modo simulado: as páginas serão desenhadas pelo próprio sistema, sem custo.' : 'A geração acontece em segundo plano (fila); cada página leva de 1 a 3 minutos.' ?></p>
+      <?php endif; ?>
     </article>
   </div>
+
+  <?php $statusInicial = \App\Services\GenerationService::status($projeto); ?>
+  <?php if ($paginas && ($projeto['status'] !== 'revisado' || array_filter($paginas, fn($p) => $p['status'] !== 'pendente'))): ?>
+  <section class="galeria" x-data="geracaoProjeto(<?= e(json_encode(['url' => url('/projetos/' . $projeto['id'] . '/status'), 'inicial' => $statusInicial], JSON_UNESCAPED_UNICODE)) ?>)" x-init="iniciar()">
+    <h2>Páginas geradas</h2>
+    <p class="progresso" :class="{ ok: estado.concluido && estado.status === 'pronto', erro: estado.status === 'erro' }">
+      <template x-if="!estado.concluido"><span>⏳ Gerando… <span x-text="estado.prontas"></span> de <span x-text="estado.total"></span> página(s) pronta(s). Esta tela atualiza sozinha a cada 5 segundos.</span></template>
+      <template x-if="estado.concluido && estado.status === 'pronto'"><span>✅ Pronto! Todas as páginas foram geradas<span x-show="precisaRevisar"> (algumas pedem conferência manual)</span>.</span></template>
+      <template x-if="estado.concluido && estado.status === 'erro'"><span>⚠️ A geração terminou com erro em alguma página. Veja abaixo e use "Gerar de novo".</span></template>
+    </p>
+    <div class="galeria-grade">
+      <template x-for="p in estado.paginas" :key="p.numero">
+        <figure class="galeria-item" :class="'estado-' + p.status">
+          <template x-if="p.imagem"><a :href="p.imagem" target="_blank"><img :src="p.imagem" :alt="'Página ' + p.numero" loading="lazy"></a></template>
+          <template x-if="!p.imagem"><div class="galeria-vazio" x-text="p.rotulo"></div></template>
+          <figcaption>
+            <strong x-text="p.numero === 0 ? 'Capa' : 'Página ' + p.numero"></strong> · <span x-text="p.rotulo"></span>
+            <span x-show="p.tentativas > 1" x-text="' · ' + p.tentativas + ' gerações'"></span>
+            <template x-if="p.problemas && p.problemas.length"><ul class="problemas"><template x-for="pr in p.problemas"><li x-text="pr"></li></template></ul></template>
+            <?php if ($pode_editar): ?>
+            <form method="post" :action="'<?= e(url('/projetos/' . $projeto['id'] . '/paginas/')) ?>' + p.numero + '/regenerar'" x-show="estado.concluido || (p.status !== 'gerando' && p.status !== 'conferindo' && p.status !== 'pendente')" onsubmit="return confirm('Gerar esta página de novo? Consome créditos de IA.')">
+              <?= \App\Csrf::field() ?><button type="submit" class="link">Gerar esta página de novo</button>
+            </form>
+            <?php endif; ?>
+          </figcaption>
+        </figure>
+      </template>
+    </div>
+  </section>
+  <?php endif; ?>
 
   <h2>Capa</h2>
   <div class="pagina-preview capa-preview">

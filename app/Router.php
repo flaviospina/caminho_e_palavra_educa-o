@@ -26,9 +26,10 @@ final class Router
     public function add(string $method, string $path, callable $handler): void
     {
         $params = [];
-        $pattern = preg_replace_callback('/\{(\w+)\}/', static function (array $m) use (&$params): string {
+        $pattern = preg_replace_callback('/\{(\w+)\}(\.[a-z0-9]+)?/i', static function (array $m) use (&$params): string {
             $params[] = $m[1];
-            return '([^/]+)';
+            // {n}.png → o parâmetro não inclui a extensão literal que vem depois
+            return isset($m[2]) ? '([^/.]+)' . preg_quote($m[2], '#') : '([^/]+)';
         }, self::normalize($path));
         $this->routes[strtoupper($method)][] = [
             'pattern' => '#^' . $pattern . '$#u',

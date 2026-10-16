@@ -53,6 +53,11 @@ return static function (Router $router): void {
     $router->get('/projetos/{id}/plano', Guard::auth([$projects, 'plan']));
     $router->get('/projetos/{id}/plano.pdf', Guard::auth([$projects, 'planPdf']));
     $router->post('/projetos/{id}/excluir', Guard::auth([$projects, 'delete']));
+    // Fase 4 — fila de geração de imagens
+    $router->post('/projetos/{id}/gerar', Guard::auth([$projects, 'generate']));
+    $router->post('/projetos/{id}/paginas/{n}/regenerar', Guard::auth([$projects, 'regeneratePage']));
+    $router->get('/projetos/{id}/status', Guard::auth([$projects, 'status']));
+    $router->get('/projetos/{id}/pagina/{n}.png', Guard::auth([$projects, 'pageImage']));
     $api = new BnccApiController();
     $router->get('/api/bncc/componentes', Guard::auth([$api, 'components']));
     $router->get('/api/bncc/habilidades', Guard::auth([$api, 'skills']));
