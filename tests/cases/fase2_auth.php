@@ -11,17 +11,6 @@ use App\Models\PasswordReset;
 use App\Models\User;
 use App\Services\Mailer;
 
-function teste_post(string $path, array $post, bool $csrf = true): App\Response
-{
-    $_POST = $post;
-    if ($csrf) {
-        $_POST[Csrf::FIELD] = Csrf::token();
-    }
-    $r = app_router()->dispatch('POST', $path);
-    $_POST = [];
-    return $r;
-}
-
 Teste::caso('login: senha errada é recusada com mensagem genérica e vai para audit_log', function () {
     $id = teste_criar_usuario('professor', 'prof.login@exemplo.com', 'Senha123');
     teste_logar(null);

@@ -13,14 +13,6 @@ use App\Services\ContentService;
 use App\Services\LessonPlanService;
 use App\Services\PocService;
 
-function pedido_fase3(array $extra = []): array
-{
-    return ContentService::validateRequest(array_merge([
-        'etapa' => 'EF_ANOS_INICIAIS', 'ano' => '4', 'componente' => 'Ciências', 'habilidades' => ['EF04CI01'],
-        'tema' => 'Misturas no dia a dia', 'finalidade' => 'introducao', 'paginas' => '3', 'estilo' => 'doodle_escolar',
-    ], $extra));
-}
-
 Teste::caso('validador: os 6 exemplos do kit passam na validação completa (BNCC + limites)', function () {
     $v = new ContentValidator();
     foreach (PocService::examples() as $nome => $file) {

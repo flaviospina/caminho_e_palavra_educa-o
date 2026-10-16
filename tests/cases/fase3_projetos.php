@@ -8,12 +8,6 @@ use App\Models\Project;
 use App\Models\User;
 use App\Services\ContentService;
 
-function projeto_de(int $userId, string $tema = 'Tema de teste'): int
-{
-    $svc = new ContentService(new EngineFactory(['AI_MOCK' => '1']));
-    return $svc->createProject(User::find($userId), pedido_fase3(['tema' => $tema]));
-}
-
 Teste::caso('assistente: GET /projetos/novo mostra os passos; POST /projetos gera e redireciona para a revisão', function () {
     $prof = teste_criar_usuario('professor', 'prof.rotas@exemplo.com');
     teste_aceitar_termo($prof);

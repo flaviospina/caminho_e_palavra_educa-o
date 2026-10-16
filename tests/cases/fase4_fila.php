@@ -19,15 +19,6 @@ use App\Models\User;
 use App\Services\GenerationService;
 use App\Services\GenerationWorker;
 
-/** Cria um projeto revisado (capa + 3 páginas) pronto para gerar. */
-function projeto_revisado_f4(int $userId, string $tema = 'Fila de teste'): array
-{
-    $id = projeto_de($userId, $tema);
-    $p = Project::find($id);
-    Project::saveReview($id, Project::currentContent($p));
-    return Project::find($id);
-}
-
 /** Motor falso que falha N vezes com erro recuperável e depois gera (via mock), devolvendo tokens. */
 final class MotorFalhaDepoisGera implements ImageEngine
 {
@@ -47,17 +38,6 @@ final class MotorFalhaDepoisGera implements ImageEngine
         $png = (new MockEngine())->generate($r)->png;
         return ImageResult::fromPng($png, 'fake', $this->model(), 1200, 100, 6240, \App\Ai\Pricing::estimate($this->model(), 100, 6240, 'high'));
     }
-}
-
-/** Isola o teste: encerra jobs pendentes de testes anteriores. */
-function fila_limpar(): void
-{
-    Database::get()->exec("UPDATE generation_jobs SET status = 'erro', error_message = 'encerrado pelo teste', finished_at = NOW(), locked_by = NULL WHERE status IN ('pendente', 'gerando', 'conferindo')");
-}
-
-function worker_mock(?ImageEngine $engine = null, ?\App\Ai\Verifier $verifier = null): GenerationWorker
-{
-    return new GenerationWorker(new EngineFactory(['AI_MOCK' => '1']), $engine, $verifier ?? new MockVerifier(), true, 'teste:1', 10, 0);
 }
 
 Teste::caso('fila: "Gerar imagens" cria um job por página (capa + 3) sem chamar a IA; rascunho é recusado', function () {
