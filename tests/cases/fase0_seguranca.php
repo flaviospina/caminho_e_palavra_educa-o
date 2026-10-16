@@ -25,7 +25,9 @@ Teste::caso('segurança: .gitignore ignora .env e arquivos gerados', function ()
     Teste::contem("\n.env\n", "\n" . $gi);
     Teste::contem("\n.env.test\n", "\n" . $gi);
     Teste::contem("\nstorage/*\n", "\n" . $gi);
-    Teste::naoContem("\nvendor", "\n" . $gi, 'vendor/ deve ser versionado');
+    Teste::naoContem("\nvendor/\n", "\n" . $gi, 'vendor/ deve ser versionado');
+    Teste::naoContem("\nvendor\n", "\n" . $gi, 'vendor/ deve ser versionado');
+    Teste::contem("\nvendor/mpdf/mpdf/ttfonts/\n", "\n" . $gi, 'Fontes do mPDF ficam fora do git');
 });
 
 Teste::caso('segurança: nginx.conf de exemplo publica só public/ e nega arquivos sensíveis', function () {
