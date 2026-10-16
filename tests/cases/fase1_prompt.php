@@ -21,6 +21,9 @@ Teste::caso('estilos: catálogo com 6 estilos e um prompt-modelo por estilo', fu
             Teste::contem($ph, $tpl, "{$k}.txt sem {$ph}");
         }
         Teste::contem('UMA ÚNICA página vertical A4', $tpl);
+        Teste::verdadeiro(!empty($e['amostra']) && is_file(ROOT_PATH . '/public' . $e['amostra']), "{$k}: imagem de amostra");
+        $info = getimagesize(ROOT_PATH . '/public' . $e['amostra']);
+        Teste::verdadeiro($info !== false && $info[0] >= 300 && $info[1] > $info[0], "{$k}: amostra em retrato");
     }
     Teste::lanca(fn() => Styles::get('inexistente'), AiException::class);
 });

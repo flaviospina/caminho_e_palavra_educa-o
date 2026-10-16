@@ -90,11 +90,16 @@ $cfg = [
 
     <div x-show="passo === 3" x-cloak>
       <h2>3. Estilo visual</h2>
+      <p class="nota">As imagens são exemplos de referência do estilo (recortes dos modelos adotados pela rede). O conteúdo da sua apostila será o texto que você revisar.</p>
       <div class="estilos">
         <?php foreach ($estilos as $es): ?>
           <label class="estilo-cartao" :class="{ escolhido: estilo === '<?= e($es['chave']) ?>' }">
             <input type="radio" name="estilo" value="<?= e($es['chave']) ?>" x-model="estilo">
-            <span class="estilo-amostra" style="background: <?= e($es['cores']['fundo']) ?>; border-color: <?= e($es['cores']['destaque']) ?>; color: <?= e($es['cores']['texto']) ?>"><span style="background: <?= e($es['cores']['escuro']) ?>"></span><?= e(mb_substr($es['nome'], 0, 1)) ?></span>
+            <?php if (!empty($es['amostra'])): ?>
+              <img class="estilo-imagem" src="<?= e(asset($es['amostra'])) ?>" alt="Exemplo do estilo <?= e($es['nome']) ?>" loading="lazy" style="border-color: <?= e($es['cores']['destaque']) ?>">
+            <?php else: ?>
+              <span class="estilo-amostra" style="background: <?= e($es['cores']['fundo']) ?>; border-color: <?= e($es['cores']['destaque']) ?>; color: <?= e($es['cores']['texto']) ?>"><span style="background: <?= e($es['cores']['escuro']) ?>"></span><?= e(mb_substr($es['nome'], 0, 1)) ?></span>
+            <?php endif; ?>
             <strong><?= e($es['nome']) ?></strong>
             <small><?= e($es['publico']) ?></small>
           </label>

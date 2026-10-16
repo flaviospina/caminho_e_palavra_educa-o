@@ -6,8 +6,24 @@
     "referencia": "referencia-02.webp (esquerda)",
     "descricao": "ilustração cartoon infantil, cores saturadas e alegres (amarelo, azul-celeste, verde, rosa), fundo claro com nuvens e grama, blocos arredondados com bordas grossas e ícones grandes, placas de madeira com setas, estrelas e confetes",
     "mascote": "uma criança sorridente de 7 anos, em estilo cartoon, com mochila escolar, sem marca ou personagem conhecido",
-    "cores": {"fundo": "#FFF8E1", "destaque": "#F59E0B", "texto": "#1F2937", "bloco": "#FFFFFF", "escuro": "#2563EB"},
-    "limites": {"titulo": 28, "subtitulo": 60, "bloco_titulo": 26, "bloco_texto": 160, "item": 60, "itens_max": 4, "blocos_max": 6}
+    "cores": {
+      "fundo": "#FFF8E1",
+      "destaque": "#F59E0B",
+      "texto": "#1F2937",
+      "bloco": "#FFFFFF",
+      "escuro": "#2563EB"
+    },
+    "limites": {
+      "titulo": 28,
+      "subtitulo": 60,
+      "bloco_titulo": 26,
+      "bloco_texto": 160,
+      "item": 60,
+      "itens_max": 4,
+      "blocos_max": 6
+    },
+    "amostra": "/assets/img/estilos/cartoon_infantil.jpg",
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
   },
   {
     "chave": "doodle_escolar",
@@ -16,8 +32,24 @@
     "referencia": "referencia-04.webp (esquerda) e referencia-02.webp (centro)",
     "descricao": "colagem de caderno escolar com rabiscos (doodles) à mão, letras recortadas multicoloridas no título, adesivos, setas, balões de fala, mini-cartões coloridos (amarelo, verde, rosa, azul) e fundo branco levemente texturizado",
     "mascote": "um estudante em traço simples de desenho animado, apontando para os blocos, sem marca ou personagem conhecido",
-    "cores": {"fundo": "#FFFFFF", "destaque": "#EC4899", "texto": "#111827", "bloco": "#FEF9C3", "escuro": "#0EA5E9"},
-    "limites": {"titulo": 30, "subtitulo": 70, "bloco_titulo": 28, "bloco_texto": 200, "item": 70, "itens_max": 5, "blocos_max": 8}
+    "cores": {
+      "fundo": "#FFFFFF",
+      "destaque": "#EC4899",
+      "texto": "#111827",
+      "bloco": "#FEF9C3",
+      "escuro": "#0EA5E9"
+    },
+    "limites": {
+      "titulo": 30,
+      "subtitulo": 70,
+      "bloco_titulo": 28,
+      "bloco_texto": 200,
+      "item": 70,
+      "itens_max": 5,
+      "blocos_max": 8
+    },
+    "amostra": "/assets/img/estilos/doodle_escolar.jpg",
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
   },
   {
     "chave": "colagem_adesivos",
@@ -26,8 +58,24 @@
     "referencia": "referencia-02.webp (centro)",
     "descricao": "página densa em estilo colagem com adesivos, etiquetas, setas e placas, mini-blocos numerados com ícones, paleta vibrante (laranja, verde, azul, lilás) sobre fundo claro, muitas pequenas ilustrações de apoio",
     "mascote": "nenhum personagem central; apenas ícones e pequenas ilustrações",
-    "cores": {"fundo": "#F8FAFC", "destaque": "#F97316", "texto": "#111827", "bloco": "#E0F2FE", "escuro": "#7C3AED"},
-    "limites": {"titulo": 32, "subtitulo": 80, "bloco_titulo": 30, "bloco_texto": 220, "item": 80, "itens_max": 5, "blocos_max": 9}
+    "cores": {
+      "fundo": "#F8FAFC",
+      "destaque": "#F97316",
+      "texto": "#111827",
+      "bloco": "#E0F2FE",
+      "escuro": "#7C3AED"
+    },
+    "limites": {
+      "titulo": 32,
+      "subtitulo": 80,
+      "bloco_titulo": 30,
+      "bloco_texto": 220,
+      "item": 80,
+      "itens_max": 5,
+      "blocos_max": 9
+    },
+    "amostra": "/assets/img/estilos/colagem_adesivos.jpg",
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
   },
   {
     "chave": "infografico_limpo",
@@ -36,8 +84,24 @@
     "referencia": "referencia-01.webp (centro) e referencia-04.webp (centro)",
     "descricao": "infográfico moderno e limpo, cartões arredondados em grade com números grandes e ícones de linha, paleta azul, laranja, roxo e verde sobre fundo branco, tipografia sem serifa forte, espaçamento generoso",
     "mascote": "um adolescente recortado em estilo semi-realista, de perfil, sem marca ou personagem conhecido",
-    "cores": {"fundo": "#FFFFFF", "destaque": "#2563EB", "texto": "#111827", "bloco": "#F1F5F9", "escuro": "#1E3A8A"},
-    "limites": {"titulo": 34, "subtitulo": 90, "bloco_titulo": 32, "bloco_texto": 260, "item": 90, "itens_max": 5, "blocos_max": 8}
+    "cores": {
+      "fundo": "#FFFFFF",
+      "destaque": "#2563EB",
+      "texto": "#111827",
+      "bloco": "#F1F5F9",
+      "escuro": "#1E3A8A"
+    },
+    "limites": {
+      "titulo": 34,
+      "subtitulo": 90,
+      "bloco_titulo": 32,
+      "bloco_texto": 260,
+      "item": 90,
+      "itens_max": 5,
+      "blocos_max": 8
+    },
+    "amostra": "/assets/img/estilos/infografico_limpo.jpg",
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
   },
   {
     "chave": "jovem_cinematografico",
@@ -46,8 +110,24 @@
     "referencia": "referencia-01.webp (esquerda) e referencia-04.webp (direita)",
     "descricao": "estética cinematográfica escura, luz azul e dourada, título enorme com brilho, cartões translúcidos sobre fundo escuro, ícones em linha fina, atmosfera inspiradora de cidade ao entardecer",
     "mascote": "um jovem de costas, estilo animação 3D, olhando o horizonte, sem marca ou personagem conhecido",
-    "cores": {"fundo": "#0F172A", "destaque": "#38BDF8", "texto": "#F8FAFC", "bloco": "#1E293B", "escuro": "#020617"},
-    "limites": {"titulo": 34, "subtitulo": 90, "bloco_titulo": 32, "bloco_texto": 240, "item": 90, "itens_max": 5, "blocos_max": 7}
+    "cores": {
+      "fundo": "#0F172A",
+      "destaque": "#38BDF8",
+      "texto": "#F8FAFC",
+      "bloco": "#1E293B",
+      "escuro": "#020617"
+    },
+    "limites": {
+      "titulo": 34,
+      "subtitulo": 90,
+      "bloco_titulo": 32,
+      "bloco_texto": 240,
+      "item": 90,
+      "itens_max": 5,
+      "blocos_max": 7
+    },
+    "amostra": "/assets/img/estilos/jovem_cinematografico.jpg",
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
   },
   {
     "chave": "epico_realista",
@@ -56,7 +136,23 @@
     "referencia": "referencia-02.webp (direita) e referencia-03.webp",
     "descricao": "pintura digital foto-realista e épica, luz dourada, céu dramático, objetos simbólicos do tema em destaque (livro aberto, globo, instrumentos), título serifado elegante, poucos blocos com fundo semitransparente",
     "mascote": "nenhum personagem; um objeto simbólico do tema em primeiro plano",
-    "cores": {"fundo": "#1C1917", "destaque": "#F59E0B", "texto": "#FAFAF9", "bloco": "#292524", "escuro": "#0C0A09"},
-    "limites": {"titulo": 30, "subtitulo": 80, "bloco_titulo": 30, "bloco_texto": 200, "item": 80, "itens_max": 4, "blocos_max": 5}
+    "cores": {
+      "fundo": "#1C1917",
+      "destaque": "#F59E0B",
+      "texto": "#FAFAF9",
+      "bloco": "#292524",
+      "escuro": "#0C0A09"
+    },
+    "limites": {
+      "titulo": 30,
+      "subtitulo": 80,
+      "bloco_titulo": 30,
+      "bloco_texto": 200,
+      "item": 80,
+      "itens_max": 4,
+      "blocos_max": 5
+    },
+    "amostra": "/assets/img/estilos/epico_realista.jpg",
+    "amostra_credito": "Recorte das imagens de referência adotadas pelo coordenador (caminhoepalavra.lovable.app); mostra o estilo, não o conteúdo."
   }
 ]

@@ -128,6 +128,7 @@ button.link { background: none; border: 0; color: var(--azul); cursor: pointer; 
 .estilo-cartao input { position: absolute; opacity: 0; }
 .estilo-amostra { display: flex; align-items: center; justify-content: center; height: 3.2rem; border-radius: 8px; border-left: 8px solid; font-weight: 700; font-size: 1.4rem; position: relative; overflow: hidden; }
 .estilo-amostra span { position: absolute; left: 0; right: 0; top: 0; height: 0.8rem; }
+.estilo-imagem { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; object-position: top; border-radius: 8px; border-left: 8px solid; background: #e2e8f0; }
 .campo-revisao { display: grid; gap: 0.25rem; margin-bottom: 0.6rem; }
 .campo-revisao .rotulo { font-weight: 600; display: flex; justify-content: space-between; gap: 0.5rem; }
 .contador { font-weight: 400; color: var(--cinza-600); font-size: 0.85rem; }
